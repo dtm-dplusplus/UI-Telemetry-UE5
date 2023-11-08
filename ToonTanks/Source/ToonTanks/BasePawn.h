@@ -22,6 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void RotateTurret(const FVector& LookAtTarget);
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* CapsuleComponent;

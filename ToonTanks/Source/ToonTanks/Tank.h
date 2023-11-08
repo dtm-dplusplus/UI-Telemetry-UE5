@@ -17,12 +17,14 @@ public:
 	ATank();
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
 	void Move(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
 
 private:
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed;
 
@@ -49,7 +51,12 @@ private:
 	class UInputAction* InputRotateTurret;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InputLook;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputFire;
+
+	APlayerController* PlayerControllerRef;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;

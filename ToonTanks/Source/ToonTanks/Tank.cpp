@@ -25,7 +25,22 @@ void ATank::BeginPlay()
 {
 	ABasePawn::BeginPlay();
 
+	
 }
+
+void ATank::Tick(float DeltaTime)
+{
+	Super::BeginPlay();
+
+	if(PlayerControllerRef)
+	{
+		FHitResult hitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+
+		DrawDebugSphere(GetWorld(),hitResult.ImpactPoint,20.f,12,	FColor::Red,false,-1.f);
+	}
+}
+
 
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -33,20 +48,23 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent); //Call the parent version
 
 	// Get the player controller
-	auto playerController = Cast<APlayerController>(GetController());
+	PlayerControllerRef = Cast<APlayerController>(GetController());
 
 	// Get the local player enhanced input subsystem
-	auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(playerController->GetLocalPlayer());
+	const auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerControllerRef->GetLocalPlayer());
 	//Add the input mapping context
 	eiSubsystem->AddMappingContext(InputMapping, 0);
 
 	// Get the EnhancedInputComponent
-	auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	const auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	//Bind to the mapping
 	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &ATank::Move);
 	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &ATank::Turn);
+	playerEIcomponent->BindAction(InputLook, ETriggerEvent::Triggered, this, &ATank::Look);
+
 }
+
 
 void ATank::Move(const FInputActionValue& Value)
 {
@@ -60,5 +78,12 @@ void ATank::Turn(const FInputActionValue& Value)
 	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
 	const float deltaRotation = TurnSpeed * Value.Get<float>() * deltaTime;
 	AddActorLocalRotation(FRotator(0.0f, deltaRotation, 0.0f), true);
+}
+
+void ATank::Look(const FInputActionValue& Value)
+{
+	FHitResult hitResult;
+	PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+	RotateTurret(hitResult.ImpactPoint);
 }
 
