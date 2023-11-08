@@ -8,6 +8,8 @@
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATank::ATank()
 {
@@ -15,6 +17,8 @@ ATank::ATank()
 	SpringArm->SetupAttachment(RootComponent);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	MovementSpeed = 300.0f;
+	TurnSpeed = 150.0f;
 }
 
 void ATank::BeginPlay()
@@ -39,14 +43,22 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Get the EnhancedInputComponent
 	auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
-	//Bind Move() to the mapping
-	//BindAction for enhanced system takes Action, ETriggerEvent, object, and function
-	//ETriggerEvent is an enum, where Triggered means "button is held down".
+	//Bind to the mapping
 	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &ATank::Move);
+	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &ATank::Turn);
 }
 
 void ATank::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Display, TEXT("Float value: %f"), Value.Get<float>());
+	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	const float deltaLocation = MovementSpeed * Value.Get<float>() * deltaTime;
+	AddActorLocalOffset(FVector(deltaLocation, 0.0f, 0.0f));
+}
+
+void ATank::Turn(const FInputActionValue& Value)
+{
+	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	const float deltaRotation = TurnSpeed * Value.Get<float>() * deltaTime;
+	AddActorLocalRotation(FRotator(0.0f, deltaRotation, 0.0f), true);
 }
 

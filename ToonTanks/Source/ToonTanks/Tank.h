@@ -16,9 +16,19 @@ class TOONTANKS_API ATank final : public ABasePawn
 public:
 	ATank();
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 	void Move(const FInputActionValue& Value);
+	void Turn(const FInputActionValue& Value);
+
 private:
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float MovementSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float TurnSpeed;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	class UCameraComponent* Camera;
 							 

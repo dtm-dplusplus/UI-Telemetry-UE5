@@ -38,13 +38,7 @@ private:
 
 	USceneComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float Speed;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	
-
 };
