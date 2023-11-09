@@ -31,14 +31,6 @@ void ATank::BeginPlay()
 void ATank::Tick(float DeltaTime)
 {
 	Super::BeginPlay();
-
-	if(PlayerControllerRef)
-	{
-		FHitResult hitResult;
-		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
-
-		DrawDebugSphere(GetWorld(),hitResult.ImpactPoint,20.f,12,	FColor::Red,false,-1.f);
-	}
 }
 
 
@@ -62,6 +54,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &ATank::Move);
 	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &ATank::Turn);
 	playerEIcomponent->BindAction(InputLook, ETriggerEvent::Triggered, this, &ATank::Look);
+	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &ATank::Fire);
+
 
 }
 
@@ -82,8 +76,6 @@ void ATank::Turn(const FInputActionValue& Value)
 
 void ATank::Look(const FInputActionValue& Value)
 {
-	FHitResult hitResult;
-	PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
-	RotateTurret(hitResult.ImpactPoint);
+	
 }
 

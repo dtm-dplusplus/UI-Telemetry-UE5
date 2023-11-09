@@ -23,6 +23,8 @@ ABasePawn::ABasePawn()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
+
+	TurretInterpRate = 10.f;
 }
 
 // Called when the game starts or when spawned
@@ -40,14 +42,18 @@ void ABasePawn::Tick(float DeltaTime)
 
 void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 {
+	float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+
 	FVector toTarget = LookAtTarget - TurretMesh->GetComponentLocation();
 	FRotator lookAtRotation = toTarget.Rotation();
 	lookAtRotation.Pitch = 0.0f;
 	lookAtRotation.Roll = 0.0f;
 
 	TurretMesh->SetWorldRotation(
-		FMath::RInterpTo(
-			TurretMesh->GetComponentRotation(), 
-			lookAtRotation,
-					UGameplayStatics::GetWorldDeltaSeconds(GetWorld()), 10.0f));
+		FMath::RInterpTo(TurretMesh->GetComponentRotation(),lookAtRotation, deltaTime, TurretInterpRate));
+}
+
+void ABasePawn::Fire()
+{
+	DrawDebugSphere(GetWorld(), GetActorLocation(), 60.0f, 12, FColor::Green);
 }
