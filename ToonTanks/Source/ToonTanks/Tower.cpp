@@ -10,7 +10,7 @@
 ATower::ATower()
 {
 	FireRange = 500.f;
-	FireRate = 3.f;
+	FireRate = 1.f;
 }
 
 

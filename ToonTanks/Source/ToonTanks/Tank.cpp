@@ -19,6 +19,7 @@ ATank::ATank()
 	Camera->SetupAttachment(SpringArm);
 	MovementSpeed = 300.0f;
 	TurnSpeed = 150.0f;
+	LookSpeed = 50.0f;
 }
 
 void ATank::BeginPlay()
@@ -76,6 +77,6 @@ void ATank::Turn(const FInputActionValue& Value)
 
 void ATank::Look(const FInputActionValue& Value)
 {
-	
+
 }
 
