@@ -20,6 +20,10 @@ ATank::ATank()
 	MovementSpeed = 300.0f;
 	TurnSpeed = 150.0f;
 	LookSpeed = 50.0f;
+
+	// BoostSpeed = MovementSpeed * 1.5f;
+	// BoostTime = 10.f;
+	// BoostCoolDownTime = 3.f;
 }
 
 void ATank::BeginPlay()
@@ -67,6 +71,7 @@ void ATank::Move(const FInputActionValue& Value)
 	const float deltaLocation = MovementSpeed * Value.Get<float>() * deltaTime;
 	AddActorLocalOffset(FVector(deltaLocation, 0.0f, 0.0f));
 }
+
 
 void ATank::Turn(const FInputActionValue& Value)
 {

@@ -10,7 +10,7 @@
 ATower::ATower()
 {
 	FireRange = 500.f;
-	FireRate = 1.f;
+	FireRate = 2.f;
 }
 
 
@@ -21,7 +21,6 @@ void ATower::BeginPlay()
 	TankRef = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
-
 }
 
 void ATower::Tick(float DeltaTime)
@@ -30,19 +29,18 @@ void ATower::Tick(float DeltaTime)
 
 	if (TankRef)
 	{
+		TankRefLocation = TankRef->GetActorLocation();
+		DistanceToTank = FVector::Dist(GetActorLocation(), TankRefLocation);
+
 		if(InFireRange())
 		{
-			const FVector tankRefLocation = TankRef->GetActorLocation();
-			RotateTurret(tankRefLocation);
+			RotateTurret(TankRefLocation);
 		}
 	}
 }
 
 bool ATower::InFireRange()
 {
-	const FVector tankRefLocation = TankRef->GetActorLocation();
-	DistanceToTank = FVector::Dist(GetActorLocation(), tankRefLocation);
-
 	if (DistanceToTank <= FireRange) return true;
 	return false;
 }

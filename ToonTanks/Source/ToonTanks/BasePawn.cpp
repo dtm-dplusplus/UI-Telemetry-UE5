@@ -43,9 +43,9 @@ void ABasePawn::Tick(float DeltaTime)
 
 void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 {
-	float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
 
-	FVector toTarget = LookAtTarget - TurretMesh->GetComponentLocation();
+	const FVector toTarget = LookAtTarget - TurretMesh->GetComponentLocation();
 	FRotator lookAtRotation = toTarget.Rotation();
 	lookAtRotation.Pitch = 0.0f;
 	lookAtRotation.Roll = 0.0f;
@@ -56,8 +56,6 @@ void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 
 void ABasePawn::Fire()
 {
-	FVector location = ProjectileSpawnPoint->GetComponentLocation();
-	FRotator rotation = ProjectileSpawnPoint->GetComponentRotation();
-
-	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, location, rotation);
+	GetWorld()->SpawnActor<AProjectile>(
+		ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 }
