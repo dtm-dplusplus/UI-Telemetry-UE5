@@ -6,6 +6,8 @@
 #include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "HealthComponent.h"
+
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -26,6 +28,7 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
 	TurretInterpRate = 10.f;
+
 }
 
 // Called when the game starts or when spawned

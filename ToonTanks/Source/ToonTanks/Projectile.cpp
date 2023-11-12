@@ -2,6 +2,8 @@
 
 
 #include "Projectile.h"
+
+#include "Tower.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -17,12 +19,28 @@ AProjectile::AProjectile()
 
 	ProjectileMovementComponent->InitialSpeed = 50.f;
 	ProjectileMovementComponent->MaxSpeed = 100.f;
+
+	ProjectileMesh->SetSimulatePhysics(true);
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (Cast<APawn>(OtherActor))
+		UE_LOG(LogTemp, Warning, TEXT("Hit! Hit Comp: %s OtherActor: %s, OtherComp: %s"), *HitComp->GetName(), *OtherActor->GetName(),*OtherComp->GetName());
+}
+
+void AProjectile::OnDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+	AController* InstigatedBy, AActor* DamageCauser)
+{
 	
 }
 
@@ -30,6 +48,5 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
