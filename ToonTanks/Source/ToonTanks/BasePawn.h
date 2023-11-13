@@ -45,8 +45,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> ProjectileClass;
 
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* DeathParticles;
 };
