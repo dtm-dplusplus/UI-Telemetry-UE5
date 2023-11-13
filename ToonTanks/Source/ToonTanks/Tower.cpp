@@ -29,12 +29,12 @@ void ATower::Tick(float DeltaTime)
 
 	if (PlayerTank)
 	{
-		TankRefLocation = PlayerTank->GetActorLocation();
-		DistanceToTank = FVector::Dist(GetActorLocation(), TankRefLocation);
+		TankPlayerLocation = PlayerTank->GetActorLocation();
+		DistanceToTank = FVector::Dist(GetActorLocation(), TankPlayerLocation);
 
 		if(InFireRange())
 		{
-			RotateTurret(TankRefLocation);
+			RotateTurret(TankPlayerLocation);
 		}
 	}
 }

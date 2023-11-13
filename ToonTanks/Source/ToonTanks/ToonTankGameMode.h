@@ -15,11 +15,15 @@ class TOONTANKS_API AToonTankGameMode : public AGameModeBase
 public:
 	void ActorDied(AActor* DeadActor);
 	virtual void BeginPlay() override;
-	void HandleGameStart();
 
+	void HandleGameStart();
+	int32 GetTargetTowerCount() const;
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameOver(bool bWonGame);
 private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
@@ -30,4 +34,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
 	float GameStartDelay = 3.f;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
+	int32 TargetTowers = 0;
 };

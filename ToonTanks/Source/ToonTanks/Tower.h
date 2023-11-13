@@ -27,14 +27,14 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class ATank* PlayerTank;
 
+	FVector TankPlayerLocation;
+
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	FVector TankRefLocation;
+	float DistanceToTank;
 
 	UFUNCTION(BlueprintCallable)
 	bool InFireRange();
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float DistanceToTank;
 
 	FTimerHandle FireRateTimerHandle;
 
