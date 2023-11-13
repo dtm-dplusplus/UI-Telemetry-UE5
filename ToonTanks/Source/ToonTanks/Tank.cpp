@@ -26,6 +26,9 @@ ATank::ATank()
 	TurnSpeed = 150.0f;
 	LookSpeed = 50.0f;
 	bAlive = false;
+
+	ProjectileDamageAmount = 40.f;
+
 }
 
 void ATank::BeginPlay()

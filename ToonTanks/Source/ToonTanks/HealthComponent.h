@@ -27,14 +27,14 @@ public:
 
 private:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health Component", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth = 100.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health Component", meta = (AllowPrivateAccess = "true"))
 	float Health = 0.f;
 
 	UFUNCTION()
 	void OnTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
-	class AToonTankGameMode* ToonTankGameMode;
+	class AToonTankGameMode* ToonTankGameMode; 
 };

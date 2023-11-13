@@ -14,23 +14,20 @@ class TOONTANKS_API ABasePawn : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	ABasePawn();
 
 	virtual void HandleDestruction();
 
-	
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	virtual void BeginPlay() override;
+
 	void RotateTurret(const FVector& LookAtTarget);
+
 	virtual void Fire();
 
-private:
+	// BASE COMPONENTS //
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* CapsuleComponent;
 
@@ -46,12 +43,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	UPROPERTY(EditAnywhere, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	// EFFECT | PARTICLES //
+	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> ProjectileClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
+	float ProjectileDamageAmount = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* DeathParticles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	// EFFECT | SOUND //
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
 	USoundBase* DeathSound;
 };

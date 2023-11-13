@@ -11,6 +11,7 @@ ATower::ATower()
 {
 	FireRange = 500.f;
 	FireRate = 2.f;
+	ProjectileDamageAmount = 10.f;
 }
 
 
