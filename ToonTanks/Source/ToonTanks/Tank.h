@@ -7,12 +7,40 @@
 #include "Tank.generated.h"
 
 struct FInputActionValue;
+class UInputAction;
 
 UCLASS()
 class TOONTANKS_API ATank final : public ABasePawn
 {
 	GENERATED_BODY()
 
+private:
+	// INPUT MAPPINGS //
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputMoveForward;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputBoost;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputTurn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputRotateTurret;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputLook;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* InputFire;
+
+	APlayerController* TankPlayerController;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 public:
 	ATank();
 
@@ -20,67 +48,36 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void Move(const FInputActionValue& Value);
-	// void Boost(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-
-
+	virtual void Fire() override;
 	virtual void HandleDestruction() override;
 
 	UFUNCTION(BlueprintCallable)
 	APlayerController* GetTankController() const { return TankPlayerController; }
+
 private:
-	
-
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	// float BoostSpeed;
-	// 
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	// float BoostTime;
-	// 
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	// float BoostCoolDownTime;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
 	float LookSpeed;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Tank|Components")
+	UPROPERTY(EditAnywhere, Category = "Tank|Camera")
 	class UCameraComponent* Camera;
 							 
-	UPROPERTY(EditDefaultsOnly, Category = "Tank|Components")
+	UPROPERTY(EditAnywhere, Category = "Tank|Camera")
 	class USpringArmComponent* SpringArm;
 
-	//Setting up inputs. Mapping context and Input Action variables, to be set in Blueprint
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* InputMapping;
+	
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputMoveForward;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Camera|Shake", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCameraShakeBase> LaunchCameraShakeClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputBoost;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputTurn;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputRotateTurret;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputLook;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InputFire;
-
-	APlayerController* TankPlayerController;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Camera|Shake", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCameraShakeBase> DeathCameraShakeClass;
 
 };

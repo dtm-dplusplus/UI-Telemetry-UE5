@@ -64,11 +64,14 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATank::HandleDestruction()
 {
+	// Shake camera on death
+	if (DeathCameraShakeClass)
+		TankPlayerController->ClientStartCameraShake(DeathCameraShakeClass);
+
 	Super::HandleDestruction();
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 }
-
 
 void ATank::Move(const FInputActionValue& Value)
 {
@@ -76,7 +79,6 @@ void ATank::Move(const FInputActionValue& Value)
 	const float deltaLocation = MovementSpeed * Value.Get<float>() * deltaTime;
 	AddActorLocalOffset(FVector(deltaLocation, 0.0f, 0.0f));
 }
-
 
 void ATank::Turn(const FInputActionValue& Value)
 {
@@ -90,5 +92,13 @@ void ATank::Look(const FInputActionValue& Value)
 	FHitResult hitResult;
 	TankPlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
 	RotateTurret(hitResult.ImpactPoint);
+}
+
+void ATank::Fire()
+{
+	Super::Fire();
+
+	if (LaunchCameraShakeClass)
+		TankPlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
 }
 

@@ -28,29 +28,30 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	void RotateTurret(const FVector& LookAtTarget);
-	void Fire();
+	virtual void Fire();
+
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* CapsuleComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* TurretMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	UPROPERTY(EditDefaultsOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* DeathParticles;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	USoundBase* DeathSound;
 };
