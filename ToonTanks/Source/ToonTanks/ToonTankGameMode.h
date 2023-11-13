@@ -13,6 +13,7 @@ class TOONTANKS_API AToonTankGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	AToonTankGameMode();
 	void ActorDied(AActor* DeadActor);
 	virtual void BeginPlay() override;
 
@@ -31,6 +32,8 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
 	class ATankPlayerController* TankPlayerController;
+
+	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
 	float GameStartDelay = 3.f;

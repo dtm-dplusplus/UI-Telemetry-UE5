@@ -6,8 +6,15 @@
 #include "Tank.h"
 #include "Tower.h"
 #include "TankPlayerController.h"
+#include "GameFramework/PhysicsVolume.h"
 
 #include "Kismet/GameplayStatics.h"
+
+AToonTankGameMode::AToonTankGameMode()
+{
+	
+
+}
 
 void AToonTankGameMode::ActorDied(AActor* DeadActor)
 {

@@ -3,8 +3,8 @@
 
 #include "Projectile.h"
 
-#include "Tower.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -22,6 +22,9 @@ AProjectile::AProjectile()
 	ProjectileMovementComponent->MaxSpeed = 100.f;
 
 	ProjectileMesh->SetSimulatePhysics(true);
+
+	TrailParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Smoke Trail"));
+	TrailParticleComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -30,11 +33,19 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+
+	// Play Launch sound
+	if (LaunchSound)
+		UGameplayStatics::SpawnSoundAtLocation(this, LaunchSound, GetActorLocation());
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	// Play Hit sound
+	if(HitSound)
+		UGameplayStatics::SpawnSoundAtLocation(this, HitSound, GetActorLocation());
+
 	const auto myOwner = GetOwner();
 
 	if (!myOwner)

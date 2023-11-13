@@ -29,6 +29,7 @@ ABasePawn::ABasePawn()
 
 	TurretInterpRate = 10.f;
 
+	CapsuleComponent->SetSimulatePhysics(true);
 }
 
 // Called when the game starts or when spawned
@@ -54,16 +55,26 @@ void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 	lookAtRotation.Roll = 0.0f;
 
 	TurretMesh->SetWorldRotation(
-		FMath::RInterpTo(TurretMesh->GetComponentRotation(),lookAtRotation, deltaTime, TurretInterpRate));
+		FMath::RInterpTo(
+			TurretMesh->GetComponentRotation(),
+			lookAtRotation,
+			deltaTime,
+			TurretInterpRate));
 }
 
 void ABasePawn::Fire()
 {
-	auto projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
+	const auto projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 	projectile->SetOwner(this);
 }
 
 void ABasePawn::HandleDestruction()
 {
-	// Effects
+	// Spawn death particls
+	if (DeathParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation());
+
+	// Play death sound
+	if (DeathSound)
+		UGameplayStatics::SpawnSoundAtLocation(this, DeathSound, GetActorLocation());
 }
