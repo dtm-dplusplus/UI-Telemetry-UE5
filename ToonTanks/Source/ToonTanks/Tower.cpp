@@ -49,7 +49,7 @@ void ATower::CheckFireCondition()
 {
 	if(PlayerTank)
 	{
-		if (InFireRange())
+		if (InFireRange() && PlayerTank->GetTankAlive())
 		{
 			Fire();
 		}

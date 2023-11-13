@@ -15,22 +15,24 @@ ATank::ATank()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
 	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->CameraLagSpeed = 4.f;
+	SpringArm->CameraRotationLagSpeed = 4.f;
+
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
 	MovementSpeed = 300.0f;
 	TurnSpeed = 150.0f;
 	LookSpeed = 50.0f;
-
-	// BoostSpeed = MovementSpeed * 1.5f;
-	// BoostTime = 10.f;
-	// BoostCoolDownTime = 3.f;
+	bAlive = false;
 }
 
 void ATank::BeginPlay()
 {
 	ABasePawn::BeginPlay();
 
-	
+	bAlive = true;
 }
 
 void ATank::Tick(float DeltaTime)
@@ -71,6 +73,7 @@ void ATank::HandleDestruction()
 	Super::HandleDestruction();
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
+	bAlive = false;
 }
 
 void ATank::Move(const FInputActionValue& Value)

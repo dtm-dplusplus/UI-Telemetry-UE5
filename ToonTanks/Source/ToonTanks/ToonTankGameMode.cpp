@@ -10,12 +10,6 @@
 
 #include "Kismet/GameplayStatics.h"
 
-AToonTankGameMode::AToonTankGameMode()
-{
-	
-
-}
-
 void AToonTankGameMode::ActorDied(AActor* DeadActor)
 {
 	if(DeadActor == TankPlayer)

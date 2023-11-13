@@ -13,7 +13,6 @@ class TOONTANKS_API AToonTankGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AToonTankGameMode();
 	void ActorDied(AActor* DeadActor);
 	virtual void BeginPlay() override;
 

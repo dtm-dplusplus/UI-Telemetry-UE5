@@ -56,7 +56,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	APlayerController* GetTankController() const { return TankPlayerController; }
 
+	UFUNCTION(BlueprintCallable)
+	bool GetTankAlive() const { return bAlive; }
 private:
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	bool bAlive;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed;
 
