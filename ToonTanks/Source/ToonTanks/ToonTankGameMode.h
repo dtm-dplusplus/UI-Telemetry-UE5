@@ -16,6 +16,10 @@ public:
 	void ActorDied(AActor* DeadActor);
 	virtual void BeginPlay() override;
 	void HandleGameStart();
+
+protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartGame();
 private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))

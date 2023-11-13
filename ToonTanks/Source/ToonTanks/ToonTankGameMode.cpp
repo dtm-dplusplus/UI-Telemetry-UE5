@@ -33,6 +33,8 @@ void AToonTankGameMode::HandleGameStart()
 	TankPlayer = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 	TankPlayerController = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 
+	StartGame();
+
 	if(TankPlayerController)
 	{
 		TankPlayerController->SetPlayerEnbaledState(false);
