@@ -56,9 +56,9 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	const auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	//Bind to the mapping
+	playerEIcomponent->BindAction(InputLook, ETriggerEvent::Triggered, this, &ATank::Look);
 	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &ATank::Move);
 	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &ATank::Turn);
-	playerEIcomponent->BindAction(InputLook, ETriggerEvent::Triggered, this, &ATank::Look);
 	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &ATank::Fire);
 
 
@@ -82,6 +82,8 @@ void ATank::Turn(const FInputActionValue& Value)
 
 void ATank::Look(const FInputActionValue& Value)
 {
-
+	FHitResult hitResult;
+	PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+	RotateTurret(hitResult.ImpactPoint);
 }
 
