@@ -26,8 +26,7 @@ public:
 
 
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float MovementSpeed;
+	
 
 	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	// float BoostSpeed;
@@ -38,38 +37,41 @@ private:
 	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	// float BoostCoolDownTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
+	float MovementSpeed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	float LookSpeed;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, Category = "Tank|Components")
 	class UCameraComponent* Camera;
 							 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, Category = "Tank|Components")
 	class USpringArmComponent* SpringArm;
 
 	//Setting up inputs. Mapping context and Input Action variables, to be set in Blueprint
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* InputMapping;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputMoveForward;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputBoost;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputTurn;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputRotateTurret;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputLook;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputFire;
 
 	APlayerController* PlayerControllerRef;
