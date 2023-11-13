@@ -25,6 +25,10 @@ public:
 	void Look(const FInputActionValue& Value);
 
 
+	virtual void HandleDestruction() override;
+
+	UFUNCTION(BlueprintCallable)
+	APlayerController* GetTankController() const { return TankPlayerController; }
 private:
 	
 
@@ -74,8 +78,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InputFire;
 
-	APlayerController* PlayerControllerRef;
+	APlayerController* TankPlayerController;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 };

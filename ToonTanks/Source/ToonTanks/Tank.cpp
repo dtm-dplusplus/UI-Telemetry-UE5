@@ -45,10 +45,10 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent); //Call the parent version
 
 	// Get the player controller
-	PlayerControllerRef = Cast<APlayerController>(GetController());
+	TankPlayerController = Cast<APlayerController>(GetController());
 
 	// Get the local player enhanced input subsystem
-	const auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerControllerRef->GetLocalPlayer());
+	const auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(TankPlayerController->GetLocalPlayer());
 	//Add the input mapping context
 	eiSubsystem->AddMappingContext(InputMapping, 0);
 
@@ -62,6 +62,13 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &ATank::Fire);
 
 
+}
+
+void ATank::HandleDestruction()
+{
+	Super::HandleDestruction();
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
 }
 
 
@@ -83,7 +90,7 @@ void ATank::Turn(const FInputActionValue& Value)
 void ATank::Look(const FInputActionValue& Value)
 {
 	FHitResult hitResult;
-	PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+	TankPlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
 	RotateTurret(hitResult.ImpactPoint);
 }
 

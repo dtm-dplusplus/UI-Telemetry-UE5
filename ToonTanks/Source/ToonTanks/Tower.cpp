@@ -18,7 +18,7 @@ void ATower::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TankRef = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerTank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
 }
@@ -27,9 +27,9 @@ void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (TankRef)
+	if (PlayerTank)
 	{
-		TankRefLocation = TankRef->GetActorLocation();
+		TankRefLocation = PlayerTank->GetActorLocation();
 		DistanceToTank = FVector::Dist(GetActorLocation(), TankRefLocation);
 
 		if(InFireRange())
@@ -47,11 +47,17 @@ bool ATower::InFireRange()
 
 void ATower::CheckFireCondition()
 {
-	if(TankRef)
+	if(PlayerTank)
 	{
 		if (InFireRange())
 		{
 			Fire();
 		}
 	}
+}
+
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+	Destroy();
 }

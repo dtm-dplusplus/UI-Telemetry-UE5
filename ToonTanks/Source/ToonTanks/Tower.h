@@ -18,19 +18,19 @@ public:
 	ATower();
 
 	void CheckFireCondition();
-	
+	virtual void HandleDestruction() override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	class ATank* TankRef;
+	class ATank* PlayerTank;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	FVector TankRefLocation;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	bool InFireRange();
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
