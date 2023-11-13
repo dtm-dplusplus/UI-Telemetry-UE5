@@ -21,5 +21,5 @@ private:
 	class ATank* TankPlayer;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	APlayerController* TankController;
+	class ATankPlayerController* TankPlayerController;
 };
