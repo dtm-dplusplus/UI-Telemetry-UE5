@@ -23,22 +23,23 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	// Actions //
 	void RotateTurret(const FVector& LookAtTarget);
 
 	virtual void Fire();
 
 	// BASE COMPONENTS //
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	UCapsuleComponent* CapsuleComponent;
+	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* BaseMesh;
+	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* TurretMesh;
+	TObjectPtr<UStaticMeshComponent> TurretMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* ProjectileSpawnPoint;
+	TObjectPtr<USceneComponent> ProjectileSpawnPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
@@ -51,9 +52,9 @@ protected:
 	float ProjectileDamageAmount = 10.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* DeathParticles;
+	TObjectPtr<UParticleSystem> DeathParticles;
 
 	// EFFECT | SOUND //
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
-	USoundBase* DeathSound;
+	TObjectPtr<USoundBase> DeathSound;
 };

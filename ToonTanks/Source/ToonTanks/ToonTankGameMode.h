@@ -18,25 +18,27 @@ public:
 
 	void HandleGameStart();
 	int32 GetTargetTowerCount() const;
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool bWonGame);
+
 private:
+	// Player reference
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class ATank> TankPlayer;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
-	class ATank* TankPlayer;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class ATankPlayerController> TankPlayerController;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
-	class ATankPlayerController* TankPlayerController;
-
-	
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
+	// Delay before game starts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	float GameStartDelay = 3.f;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "GameMode", meta = (AllowPrivateAccess = "true"))
+	// Number of turret towers in the level
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	int32 TargetTowers = 0;
 };

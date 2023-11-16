@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 
 
+
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
 {
@@ -28,33 +29,30 @@ protected:
 private:
 	// PROJECTILE PROPERTIES //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* ProjectileMesh;
+	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	class UProjectileMovementComponent* ProjectileMovementComponent;
+	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	float DamageAmount = 40.f;
 
-
 	// EFFECT | PARTICLES //
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UParticleSystemComponent* TrailParticleComponent;
+	TObjectPtr<UParticleSystemComponent> TrailParticleComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* HitParticles;
+	TObjectPtr<UParticleSystem> HitParticles;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* TrailParticles;
-
+	TObjectPtr<UParticleSystem> TrailParticles;
 
 	// EFFECT | SOUND //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	USoundBase* LaunchSound;
+	TObjectPtr<USoundBase> LaunchSound;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	USoundBase* HitSound;
-
+	TObjectPtr<USoundBase> HitSound;
 
 	// EFFECT | CAMERA //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))

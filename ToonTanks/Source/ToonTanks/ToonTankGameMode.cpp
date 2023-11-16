@@ -53,8 +53,6 @@ void AToonTankGameMode::HandleGameStart()
 			TankPlayerController, &ATankPlayerController::SetPlayerEnbaledState, true);
 		GetWorldTimerManager().SetTimer(playerEnableTimerHandle, playerInputTimerDelegate, GameStartDelay, false);
 	}
-
-	
 }
 
 int32 AToonTankGameMode::GetTargetTowerCount() const

@@ -13,34 +13,7 @@ UCLASS()
 class TOONTANKS_API ATank final : public ABasePawn
 {
 	GENERATED_BODY()
-
-private:
-	// INPUT MAPPINGS //
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* InputMapping;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputMoveForward;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputBoost;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputTurn;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputRotateTurret;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputLook;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
-	UInputAction* InputFire;
-
-	APlayerController* TankPlayerController;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	
 public:
 	ATank();
 
@@ -54,7 +27,7 @@ public:
 	virtual void HandleDestruction() override;
 
 	UFUNCTION(BlueprintCallable)
-	APlayerController* GetTankController() const { return TankPlayerController; }
+APlayerController* GetTankController() const { return TankPlayerController; }
 
 	UFUNCTION(BlueprintCallable)
 	bool GetTankAlive() const { return bAlive; }
@@ -73,12 +46,10 @@ private:
 	float LookSpeed;
 
 	UPROPERTY(EditAnywhere, Category = "Tank|Camera")
-	class UCameraComponent* Camera;
+	TObjectPtr<class UCameraComponent> Camera;
 							 
 	UPROPERTY(EditAnywhere, Category = "Tank|Camera")
-	class USpringArmComponent* SpringArm;
-
-	
+	TObjectPtr<class USpringArmComponent> SpringArm;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Camera|Shake", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> LaunchCameraShakeClass;
@@ -86,4 +57,31 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Camera|Shake", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> DeathCameraShakeClass;
 
+	// INPUT MAPPINGS //
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputMoveForward;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputBoost;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputTurn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputRotateTurret;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputLook;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputFire;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Tank|Enhanced Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<APlayerController> TankPlayerController;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 };
