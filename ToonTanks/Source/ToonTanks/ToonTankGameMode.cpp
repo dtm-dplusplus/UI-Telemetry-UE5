@@ -6,9 +6,9 @@
 #include "Tank.h"
 #include "Tower.h"
 #include "TankPlayerController.h"
-#include "GameFramework/PhysicsVolume.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Windows/WindowsPlatformCrashContext.h"
 
 void AToonTankGameMode::ActorDied(AActor* DeadActor)
 {
@@ -32,7 +32,17 @@ void AToonTankGameMode::ActorDied(AActor* DeadActor)
 void AToonTankGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Adds game data to crash context
+	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonTankGameMode"));
+
 	HandleGameStart();
+}
+void AToonTankGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	FPlatformCrashContext::SetGameData(TEXT("GameMode"), FString());
 }
 
 void AToonTankGameMode::HandleGameStart()
@@ -50,7 +60,10 @@ void AToonTankGameMode::HandleGameStart()
 
 		FTimerHandle playerEnableTimerHandle;
 		const FTimerDelegate playerInputTimerDelegate = FTimerDelegate::CreateUObject(
-			TankPlayerController, &ATankPlayerController::SetPlayerEnbaledState, true);
+			TankPlayerController, 
+			&ATankPlayerController::SetPlayerEnbaledState, 
+			true);
+
 		GetWorldTimerManager().SetTimer(playerEnableTimerHandle, playerInputTimerDelegate, GameStartDelay, false);
 	}
 }

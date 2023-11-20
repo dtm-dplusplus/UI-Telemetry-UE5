@@ -24,6 +24,7 @@ void ATower::BeginPlay()
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
 }
 
+
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -61,4 +62,5 @@ void ATower::HandleDestruction()
 {
 	Super::HandleDestruction();
 	Destroy();
+	check(false);
 }

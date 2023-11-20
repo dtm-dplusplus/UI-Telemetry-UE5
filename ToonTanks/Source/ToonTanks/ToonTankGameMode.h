@@ -15,6 +15,7 @@ class TOONTANKS_API AToonTankGameMode : public AGameModeBase
 public:
 	void ActorDied(AActor* DeadActor);
 	virtual void BeginPlay() override;
+	void EndPlay(EEndPlayReason::Type EndPlayReason);
 
 	void HandleGameStart();
 	int32 GetTargetTowerCount() const;
