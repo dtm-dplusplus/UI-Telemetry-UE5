@@ -62,5 +62,4 @@ void ATower::HandleDestruction()
 {
 	Super::HandleDestruction();
 	Destroy();
-	check(false);
 }
