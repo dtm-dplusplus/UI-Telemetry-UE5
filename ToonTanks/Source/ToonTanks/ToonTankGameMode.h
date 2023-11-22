@@ -50,9 +50,13 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	int32 TargetTowers = 0;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	// REPLAY //
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode|Replay", meta = (AllowPrivateAccess = "true"))
 	bool bRecordGameplay = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TankGameMode|Replay", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UReplayGameInstance> ReplayGameInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TankGameMode|Replay", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AReplayPlayerController> ReplayPlayerController;
 };

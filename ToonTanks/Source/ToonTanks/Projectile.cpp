@@ -15,7 +15,7 @@ AProjectile::AProjectile()
 
 	// Set replication for replay functionality
 	// Set replication for replay functionality
-	SetReplicates(true);
+	bReplicates = true;
 	AActor::SetReplicateMovement(true);
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));

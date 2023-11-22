@@ -16,7 +16,7 @@ ABasePawn::ABasePawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Set replication for replay functionality
-    SetReplicates(true);
+    bReplicates = true;
     AActor::SetReplicateMovement(true);
 
 	// Set up components for blueprint

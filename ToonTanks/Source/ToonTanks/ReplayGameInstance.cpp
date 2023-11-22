@@ -3,11 +3,12 @@
 
 #include "ReplayGameInstance.h"
 
+#include "Engine/DemoNetDriver.h"
+
 UReplayGameInstance::UReplayGameInstance()
 {
-	int randomNumber = FMath::RandRange(0, 100);
-	RecordingName = "My Replay" + randomNumber;
-	UIRecordingName = "UI Replay" + randomNumber;
+	RecordingName = "My Replay";
+	UIRecordingName = "UI Replay";
 }
 
 void UReplayGameInstance::StartRecording()
@@ -29,4 +30,17 @@ void UReplayGameInstance::StartReplay()
 
 void UReplayGameInstance::StopReplay()
 {
+	
+}
+
+void UReplayGameInstance::RestartReplay()
+{
+	if (const UWorld* world = GetWorld())
+	{
+		if (UDemoNetDriver* demoNetDriver = world->GetDemoNetDriver())
+		{
+			demoNetDriver->StopDemo();
+			demoNetDriver->GotoTimeInSeconds(0);
+		}
+	}
 }

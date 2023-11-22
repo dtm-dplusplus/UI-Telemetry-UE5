@@ -6,14 +6,15 @@
 #include "Engine/DemoNetDriver.h"
 #include "Engine/World.h"
 
-void AReplayPlayerController::RestartRecording()
+// void AReplayPlayerController::OnPauseReplay()
+// {
+// }
+// 
+// void AReplayPlayerController::OnRestartRecording()
+// {
+// }
+AReplayPlayerController::AReplayPlayerController()
 {
-	if (const UWorld* world = GetWorld())
-	{
-		if (UDemoNetDriver* demoNetDriver = world->GetDemoNetDriver())
-		{
-			demoNetDriver->StopDemo();
-			demoNetDriver->GotoTimeInSeconds(0);
-		}
-	}
+	bShowMouseCursor = false;
+	DefaultMouseCursor = EMouseCursor::None;
 }

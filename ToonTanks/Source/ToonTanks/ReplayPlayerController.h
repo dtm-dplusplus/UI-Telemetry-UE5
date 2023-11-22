@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ReplayPlayerController.generated.h"
 
+class UInputAction;
 /**
  * 
  */
@@ -15,6 +16,12 @@ class TOONTANKS_API AReplayPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Replay")
-	void RestartRecording();
+	AReplayPlayerController();
+	// UFUNCTION(BlueprintCallable, Category = "Replay")
+	// void OnPauseReplay();
+	// 
+	// UFUNCTION(BlueprintCallable, Category = "Replay")
+	// void OnRestartRecording();
+
+private:
 };

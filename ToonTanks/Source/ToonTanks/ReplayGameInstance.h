@@ -14,22 +14,45 @@ class TOONTANKS_API UReplayGameInstance : public UGameInstance
 public:
 	UReplayGameInstance();
 
-	UFUNCTION(BlueprintCallable, Category = "Replay")
+	// Recording //
+	UFUNCTION(BlueprintCallable, Category = "Replay|Recording")
 	void StartRecording();
 
-	UFUNCTION(BlueprintCallable, Category = "Replay")
+	UFUNCTION(BlueprintCallable, Category = "Replay|Recording")
 	void StopRecording();
 
-	UFUNCTION(BlueprintCallable, Category = "Replay")
+	bool GetStopRecordingDelay() const { return bStopRecordingDelay; }
+
+	float GetStopRecordingDelayTime() const { return StopRecordingDelay; }
+
+	// Replay //
+	UFUNCTION(BlueprintCallable, Category = "Replay|Playback")
 	void StartReplay();
 
-	UFUNCTION(BlueprintCallable, Category = "Replay")
+	UFUNCTION(BlueprintCallable, Category = "Replay|Playback")
 	void StopReplay();
 
+	UFUNCTION(BlueprintCallable, Category = "Replay|Playback")
+	void RestartReplay();
+
+	
+
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Replay", meta = (AllowPrivateAccess = "true"))
+	// Recording //
+	UPROPERTY(EditDefaultsOnly, Category = "Replay|Recording", meta = (AllowPrivateAccess = "true"))
 	FString RecordingName;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Replay", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, Category = "Replay|Recording", meta = (AllowPrivateAccess = "true"))
 	FString UIRecordingName;
+
+	// Delay before game starts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Replay|Recording", meta = (AllowPrivateAccess = "true"))
+	bool bStopRecordingDelay = true;
+
+	// Delay before game starts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Replay|Recording", meta = (AllowPrivateAccess = "true"))
+	float StopRecordingDelay = 1.5f;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Replay", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UDemoNetDriver> DemoNetDriver;
 };
