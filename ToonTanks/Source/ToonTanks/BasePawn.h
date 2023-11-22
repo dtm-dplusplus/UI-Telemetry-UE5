@@ -7,7 +7,7 @@
 #include "BasePawn.generated.h"
 
 class UCapsuleComponent;
-
+class UHealthComponent;
 UCLASS()
 class TOONTANKS_API ABasePawn : public APawn
 {
@@ -44,6 +44,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHealthComponent> HealthComponent;
+
 	// EFFECT | PARTICLES //
 	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> ProjectileClass;
@@ -57,4 +60,5 @@ protected:
 	// EFFECT | SOUND //
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoundBase> DeathSound;
+
 };

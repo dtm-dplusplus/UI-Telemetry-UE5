@@ -16,6 +16,7 @@ ABasePawn::ABasePawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	CapsuleComponent->SetSimulatePhysics(true);
 	RootComponent= CapsuleComponent;
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("Base Mesh");
@@ -27,9 +28,10 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+
 	TurretInterpRate = 10.f;
 
-	CapsuleComponent->SetSimulatePhysics(true);
 }
 
 // Called when the game starts or when spawned
