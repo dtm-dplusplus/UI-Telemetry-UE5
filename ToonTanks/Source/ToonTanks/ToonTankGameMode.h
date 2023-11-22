@@ -14,18 +14,21 @@ class TOONTANKS_API AToonTankGameMode : public AGameModeBase
 
 public:
 	void ActorDied(AActor* DeadActor);
-	virtual void BeginPlay() override;
-	void EndPlay(EEndPlayReason::Type EndPlayReason);
+	void BeginPlay() override;
+	void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
-	void HandleGameStart();
 	int32 GetTargetTowerCount() const;
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStartGame();
+
 	void GameOver(bool bWonGame);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveGameOver(bool bWonGame);
 
 private:
 	// Player reference
@@ -37,9 +40,19 @@ private:
 
 	// Delay before game starts
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	bool bGameStartDelay = false;
+
+	// Delay before game starts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	float GameStartDelay = 3.f;
 
 	// Number of turret towers in the level
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	int32 TargetTowers = 0;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	bool bRecordGameplay = true;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UReplayGameInstance> ReplayGameInstance;
 };

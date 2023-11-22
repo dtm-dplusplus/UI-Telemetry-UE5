@@ -3,6 +3,7 @@
 
 #include "ToonTankGameMode.h"
 
+#include "ReplayGameInstance.h"
 #include "Tank.h"
 #include "Tower.h"
 #include "TankPlayerController.h"
@@ -33,39 +34,17 @@ void AToonTankGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Adds game data to crash context
-	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonTankGameMode"));
+	StartGame();
 
-	HandleGameStart();
+	// BP Event for designers. Start Game start timer. Adds UI widgets to viewport
+	ReceiveStartGame();
 }
+
 void AToonTankGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
 	FPlatformCrashContext::SetGameData(TEXT("GameMode"), FString());
-}
-
-void AToonTankGameMode::HandleGameStart()
-{
-	// Count number of Towers in the world
-	TargetTowers = GetTargetTowerCount();
-	TankPlayer = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
-	TankPlayerController = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
-	StartGame();
-
-	if(TankPlayerController)
-	{
-		TankPlayerController->SetPlayerEnbaledState(false);
-
-		FTimerHandle playerEnableTimerHandle;
-		const FTimerDelegate playerInputTimerDelegate = FTimerDelegate::CreateUObject(
-			TankPlayerController, 
-			&ATankPlayerController::SetPlayerEnbaledState, 
-			true);
-
-		GetWorldTimerManager().SetTimer(playerEnableTimerHandle, playerInputTimerDelegate, GameStartDelay, false);
-	}
 }
 
 int32 AToonTankGameMode::GetTargetTowerCount() const
@@ -74,5 +53,55 @@ int32 AToonTankGameMode::GetTargetTowerCount() const
 	UGameplayStatics::GetAllActorsOfClass(this, ATower::StaticClass(), towers);
 
 	return towers.Num();
+}
+
+void AToonTankGameMode::StartGame()
+{
+	// Adds game data to crash context
+	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonTankGameMode"));
+
+	// Get game instance
+	if (bRecordGameplay)
+	{
+		if (ReplayGameInstance = Cast<UReplayGameInstance>(GetGameInstance()); ReplayGameInstance)
+		{
+			ReplayGameInstance->StartRecording();
+		}
+	}
+
+	// Count number of Towers in the world
+	TargetTowers = GetTargetTowerCount();
+
+	// Get tank player and controller
+	TankPlayer = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+	TankPlayerController = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	if (TankPlayerController)
+	{
+		if (bGameStartDelay)
+		{
+			TankPlayerController->SetPlayerEnbaledState(false);
+
+			FTimerHandle playerEnableTimerHandle;
+			const FTimerDelegate playerInputTimerDelegate = FTimerDelegate::CreateUObject(
+				TankPlayerController,
+				&ATankPlayerController::SetPlayerEnbaledState,
+				true);
+
+			GetWorldTimerManager().SetTimer(playerEnableTimerHandle, playerInputTimerDelegate, GameStartDelay, false);
+		}
+		else
+		{
+			TankPlayerController->SetPlayerEnbaledState(true);
+		}
+	}
+}
+
+void AToonTankGameMode::GameOver(const bool bWonGame)
+{
+	if (ReplayGameInstance && bRecordGameplay) ReplayGameInstance->StopRecording();
+
+	// BP Event for designers. 
+	RecieveGameOver(bWonGame);
 }
  

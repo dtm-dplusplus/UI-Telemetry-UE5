@@ -15,6 +15,11 @@ ABasePawn::ABasePawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set replication for replay functionality
+    SetReplicates(true);
+    AActor::SetReplicateMovement(true);
+
+	// Set up components for blueprint
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	CapsuleComponent->SetSimulatePhysics(true);
 	RootComponent= CapsuleComponent;
@@ -30,6 +35,7 @@ ABasePawn::ABasePawn()
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
 
+	// Set properties of base pawn
 	TurretInterpRate = 10.f;
 
 }
