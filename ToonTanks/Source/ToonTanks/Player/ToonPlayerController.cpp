@@ -4,7 +4,7 @@
 #include "ToonPlayerController.h"
 #include "GameFramework/Pawn.h"
 
-AToonPlayerController::AToonPlayerController(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+AToonPlayerController::AToonPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
@@ -22,9 +22,4 @@ void AToonPlayerController::SetPlayerEnbaledState(const bool bPlayerEnabled)
 	}
 
 	bShowMouseCursor = bPlayerEnabled;
-}
-
-void AToonReplayPlayerController::SetPlayer(UPlayer* InPlayer)
-{
-	Super::SetPlayer(InPlayer);
 }

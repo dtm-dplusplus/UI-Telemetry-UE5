@@ -15,16 +15,6 @@ class TOONTANKS_API AToonPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	AToonPlayerController(const FObjectInitializer& ObjectInitializer);
+	AToonPlayerController();
 	void SetPlayerEnbaledState(bool bPlayerEnabled);
-};
-
-
-// A player controller used for replay capture and playback
-UCLASS()
-class AToonReplayPlayerController : public AToonPlayerController
-{
-	GENERATED_BODY()
-
-	virtual void SetPlayer(UPlayer* InPlayer) override;
 };

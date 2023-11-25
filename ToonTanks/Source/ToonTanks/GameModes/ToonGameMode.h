@@ -14,14 +14,13 @@ class TOONTANKS_API AToonGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
-
-	AToonGameMode();
 	void ActorDied(AActor* DeadActor);
-	virtual void BeginPlay() override;
-	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
+	void BeginPlay() override;
+	void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 	int32 GetTargetTowerCount() const;
 
+protected:
 	void StartGame();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -36,6 +35,9 @@ private:
 	// Player reference
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AToonTankPawn> PlayerTank;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AToonPlayerController> TankPlayerController;
 
 	// Delay before game starts
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))

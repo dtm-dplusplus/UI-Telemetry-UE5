@@ -2,54 +2,36 @@
 //
 //
 #include "ToonReplaySubsystem.h"
-
-#include "Engine/DemoNetDriver.h"
-
-void UToonReplaySubsystem::PlayReplay(UToonReplayEntry* Replay)
-{
-	if (Replay)
-	{
-		GetGameInstance()->PlayReplay(Replay->StreamInfo.Name);
-	}
-}
-
-// void ULyraReplaySubsystem::DeleteReplay()
-// {
-//	ReplayStreamer->DeleteFinishedStream(SelectedItem->StreamInfo.Name, FDeleteFinishedStreamCallback::CreateSP(this, &SShooterDemoList::OnDeleteFinishedStreamComplete));
-// }
-
-void UToonReplaySubsystem::SeekInActiveReplay(float TimeInSeconds)
-{
-	if (UDemoNetDriver* DemoDriver = GetDemoDriver())
-	{
-		DemoDriver->GotoTimeInSeconds(TimeInSeconds);
-	}
-}
-
-float UToonReplaySubsystem::GetReplayLengthInSeconds() const
-{
-	if (UDemoNetDriver* DemoDriver = GetDemoDriver())
-	{
-		return DemoDriver->GetDemoTotalTime();
-	}
-	return 0.0f;
-}
-
-float UToonReplaySubsystem::GetReplayCurrentTime() const
-{
-	if (UDemoNetDriver* demoDriver = GetDemoDriver())
-	{
-		return demoDriver->GetDemoCurrentTime();
-	}
-	return 0.0f;
-}
-
-UDemoNetDriver* UToonReplaySubsystem::GetDemoDriver() const
-{
-	if (UWorld* World = GetGameInstance()->GetWorld())
-	{
-		return World->GetDemoNetDriver();
-	}
-	return nullptr;
-}
-
+//#include "Engine/DemoNetDriver.h"
+//
+//UToonReplaySubsystem::UToonReplaySubsystem()
+//{
+//	RecordingName = "My Replay";
+//	UIRecordingName = "UI Replay";
+//}
+//
+//void UToonReplaySubsystem::StartRecording()
+//{
+//	TArray<FString> urlOptions;
+//	urlOptions.Add("ReplayStreamerOverride=InMemoryReplayStreaming");
+//	//ToonGameInstance->StartRecordingReplay(RecordingName, UIRecordingName, urlOptions);
+//}
+//
+//void UToonReplaySubsystem::StopRecording()
+//{
+//	//ToonGameInstance->StopRecordingReplay();
+//}
+//
+//void UToonReplaySubsystem::StartReplay()
+//{
+//	//ToonGameInstance->PlayReplay(RecordingName, nullptr);
+//}
+//
+//void UToonReplaySubsystem::RestartReplay()
+//{
+//	if (DemoNetDriver)
+//	{
+//		DemoNetDriver->StopDemo();
+//		DemoNetDriver->GotoTimeInSeconds(0);
+//	}
+//}
