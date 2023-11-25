@@ -11,12 +11,18 @@
 #include "Windows/WindowsPlatformCrashContext.h"
 #include "ToonTanks/Player/ToonPlayerController.h"
 
+AToonGameMode::AToonGameMode()
+{
+	PlayerControllerClass = AToonPlayerController::StaticClass();
+	ReplaySpectatorPlayerControllerClass = AToonReplayPlayerController::StaticClass();
+	DefaultPawnClass = AToonTankPawn::StaticClass();
+}
+
 void AToonGameMode::ActorDied(AActor* DeadActor)
 {
 	if (DeadActor == PlayerTank)
 	{
 		PlayerTank->OnDestroy();
-		TankPlayerController->SetPlayerEnbaledState(false);
 		GameOver(false);
 	}
 	else if (AToonTowerPawn* deadTower = Cast<AToonTowerPawn>(DeadActor))
@@ -64,7 +70,6 @@ void AToonGameMode::StartGame()
 
 	// // Get tank player and controller
 	PlayerTank = Cast<AToonTankPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
-	TankPlayerController = Cast<AToonPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }
 
 void AToonGameMode::GameOver(const bool bWonGame)

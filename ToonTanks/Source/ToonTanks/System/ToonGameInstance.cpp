@@ -7,6 +7,7 @@
 
 UToonGameInstance::UToonGameInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+
 }
 
 void UToonGameInstance::SetRecordGameplay(const bool bRecord)
