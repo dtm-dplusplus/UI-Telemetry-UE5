@@ -57,6 +57,7 @@ void AToonTankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	// Get the player controller
 	TankPlayerController = Cast<APlayerController>(GetController());
+	TankPlayerController->SetInputMode(FInputModeGameAndUI());
 
 	// Get the local player enhanced input subsystem
 	const auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(TankPlayerController->GetLocalPlayer());

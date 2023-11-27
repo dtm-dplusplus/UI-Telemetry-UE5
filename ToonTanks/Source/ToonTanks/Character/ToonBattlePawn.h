@@ -18,6 +18,15 @@ public:
 	virtual void OnDestroy();
 	virtual void Fire();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveFire();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveDestroy();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveEnemyKiled();
+
 	virtual void Tick(float DeltaTime) override;
 
 protected:

@@ -6,6 +6,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Kismet/GameplayStatics.h"
+#include "Engine/DataTable.h"
 #include "ToonTanks/Character/ToonTankPawn.h"
 #include "ToonTanks/Character/ToonTowerPawn.h"
 #include "Windows/WindowsPlatformCrashContext.h"
@@ -13,21 +14,24 @@
 
 void AToonGameMode::ActorDied(AActor* DeadActor)
 {
-	if (DeadActor == PlayerTank)
+	if (AToonTowerPawn* deadTower = Cast<AToonTowerPawn>(DeadActor))
+	{
+		deadTower->OnDestroy();
+
+		
+		EnemiesAliveCount--;
+		if (EnemiesAliveCount == 0)
+		{
+			GameOver(true);
+		}
+	}
+	else if (DeadActor == PlayerTank)
 	{
 		PlayerTank->OnDestroy();
 		TankPlayerController->SetPlayerEnbaledState(false);
 		GameOver(false);
 	}
-	else if (AToonTowerPawn* deadTower = Cast<AToonTowerPawn>(DeadActor))
-	{
-		deadTower->OnDestroy();
-		TargetTowers--;
-		if (TargetTowers == 0)
-		{
-			GameOver(true);
-		}
-	}
+	 
 }
 
 void AToonGameMode::BeginPlay()
@@ -60,7 +64,7 @@ void AToonGameMode::StartGame()
 	// Adds game data to crash context
 	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonTankGameMode"));
 
-	TargetTowers = GetTargetTowerCount();
+	EnemiesAliveCount = GetTargetTowerCount();
 
 	// // Get tank player and controller
 	PlayerTank = Cast<AToonTankPawn>(UGameplayStatics::GetPlayerPawn(this, 0));

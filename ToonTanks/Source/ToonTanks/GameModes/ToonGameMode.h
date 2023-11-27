@@ -18,8 +18,12 @@ public:
 	void BeginPlay() override;
 	void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
+	
+
 	int32 GetTargetTowerCount() const;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UDataTable> ToonGameStatsTable;
 protected:
 	void StartGame();
 
@@ -40,14 +44,14 @@ private:
 	TObjectPtr<class AToonPlayerController> TankPlayerController;
 
 	// Delay before game starts
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "TankGameMode", meta = (InlineEditConditionToggle))
 	bool bGameStartDelay = false;
 
 	// Delay before game starts
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true", EditCondition = "bGameStartDelay"))
 	float GameStartDelay = 3.f;
 
 	// Number of turret towers in the level
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
-	int32 TargetTowers = 0;
+	int32 EnemiesAliveCount = 0;
 };
