@@ -17,6 +17,10 @@
 		{
 			"Name": "DataRegistry",
 			"Enabled": true
+		},
+		{
+			"Name": "CommonUI",
+			"Enabled": true
 		}
 	]
 }
