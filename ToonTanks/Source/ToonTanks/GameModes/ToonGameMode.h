@@ -3,29 +3,70 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/GameModeBase.h"
 #include "ToonGameMode.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType)
+struct FToonGameStats : public FTableRowBase {
+	GENERATED_BODY()
+
+public:
+	FToonGameStats() : ProjectilesFired(0), ProjectilesHit(0), EnemiesKilled(0) {}
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Pawn")
+	FString RowName;
+
+	FTimespan TimeStamp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Pawn")
+	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Pawn")
+	int32 ProjectilesFired;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Pawn")
+	int32 ProjectilesHit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Pawn")
+	int32 EnemiesKilled;
+};
+
+USTRUCT(BlueprintType)
+struct FToonProjectileData : public FTableRowBase {
+	GENERATED_BODY()
+
+public:
+	FToonProjectileData() : GameSessionTimeStamp(FDateTime::Now()), ProjetcileOwner("Owner"), ProjectileType("") {}
+
+	FDateTime WorldTimeStamp;
+
+	FDateTime GameSessionTimeStamp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Projectile")
+	FString ProjetcileOwner;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Projectile")
+	FString ProjectileType;
+};
+
 UCLASS()
 class TOONTANKS_API AToonGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
 	void ActorDied(AActor* DeadActor);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveActorDied(bool bIsPlayer);
+
 	void BeginPlay() override;
 	void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 	
 
-	int32 GetTargetTowerCount() const;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UDataTable> ToonGameStatsTable;
-protected:
-	void StartGame();
+	int32 GetEnemiesAliveCount() const;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReceiveStartGame();
@@ -34,6 +75,8 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecieveGameOver(bool bWonGame);
+
+
 
 private:
 	// Player reference

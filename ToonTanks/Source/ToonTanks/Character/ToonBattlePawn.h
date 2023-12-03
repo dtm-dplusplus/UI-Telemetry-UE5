@@ -27,8 +27,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecieveEnemyKiled();
 
+
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	int32 ProjetcilesFired;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	int32 EnemiesKilled;
+	
 protected:
 	AToonBattlePawn();
 	virtual void BeginPlay() override;
@@ -55,8 +63,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UToonHealthComponent> HealthComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UToonHealthComponent> HealthComponent;
 
 	// EFFECT | PARTICLES //
 	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))

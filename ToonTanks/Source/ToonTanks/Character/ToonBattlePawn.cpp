@@ -33,7 +33,7 @@ AToonBattlePawn::AToonBattlePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
-	HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
+	//HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
 
 	// Set properties of base pawn
 	TurretInterpRate = 10.f;
@@ -44,6 +44,9 @@ AToonBattlePawn::AToonBattlePawn()
 void AToonBattlePawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ProjetcilesFired = 0;
+	EnemiesKilled = 0;
 }
 
 // Called every frame
@@ -72,6 +75,8 @@ void AToonBattlePawn::RotateTurret(const FVector& LookAtTarget)
 
 void AToonBattlePawn::Fire()
 {
+	ProjetcilesFired++;
+
 	// Spawn Projectile actor
 	const auto projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 	

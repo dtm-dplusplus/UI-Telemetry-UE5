@@ -17,9 +17,6 @@ UToonHealthComponent::UToonHealthComponent()
 	Health = MaxHealth;
 }
 
-
-
-
 // Called when the game starts
 void UToonHealthComponent::BeginPlay()
 {
@@ -27,15 +24,7 @@ void UToonHealthComponent::BeginPlay()
 
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UToonHealthComponent::OnApplyDamage);
 	ToonTankGameMode = Cast<AToonGameMode>(UGameplayStatics::GetGameMode(this));
-}
 
-
-// Called every frame
-void UToonHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UToonHealthComponent::OnApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
@@ -46,6 +35,9 @@ void UToonHealthComponent::OnApplyDamage(AActor* DamagedActor, float Damage, con
 
 	// Apply damage
 	Health -= Damage;
+
+	//BP
+	RecieveHealthChanged(Health, Damage);
 
 	// Check actor died
 	if (Health <= 0.f)

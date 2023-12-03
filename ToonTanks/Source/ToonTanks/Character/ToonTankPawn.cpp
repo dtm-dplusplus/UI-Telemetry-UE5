@@ -40,6 +40,7 @@ void AToonTankPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 }
 
 void AToonTankPawn::Tick(float DeltaTime)
@@ -119,5 +120,8 @@ void AToonTankPawn::Fire()
 	{
 		TankPlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
 	}
+
+	// Call BP version of Fire
+	RecieveFire();
 }
 

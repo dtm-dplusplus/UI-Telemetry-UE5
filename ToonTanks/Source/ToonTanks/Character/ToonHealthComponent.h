@@ -7,7 +7,7 @@
 #include "ToonHealthComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOONTANKS_API UToonHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -15,10 +15,12 @@ class TOONTANKS_API UToonHealthComponent : public UActorComponent
 public:	
 	UToonHealthComponent();
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	UFUNCTION()
 	void OnApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecieveHealthChanged(float NewHealth, float HealthLost);
+
 protected:
 	virtual void BeginPlay() override;
 
