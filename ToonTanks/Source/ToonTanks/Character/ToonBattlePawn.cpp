@@ -83,6 +83,8 @@ void AToonBattlePawn::Fire()
 	// Set projectile properties
 	projectile->SetDamageAmount(ProjectileDamageAmount);
 	projectile->SetOwner(this);
+
+	RecieveFire(projectile);
 }
 
 void AToonBattlePawn::OnDestroy()

@@ -40,8 +40,10 @@ struct FToonProjectileData : public FTableRowBase {
 public:
 	FToonProjectileData() : GameSessionTimeStamp(FDateTime::Now()), ProjetcileOwner("Owner"), ProjectileType("") {}
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Projectile")
 	FDateTime WorldTimeStamp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Projectile")
 	FDateTime GameSessionTimeStamp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Telementary|Projectile")

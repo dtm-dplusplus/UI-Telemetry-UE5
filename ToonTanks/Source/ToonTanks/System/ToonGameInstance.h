@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
 #include "Engine/GameInstance.h"
-#include "ToonTanks/Player/ToonPlayerController.h"
 #include "ToonGameInstance.generated.h"
 
 /**
  * 
  */
+
+
 
 
 UCLASS()
@@ -20,7 +20,4 @@ class TOONTANKS_API UToonGameInstance : public UGameInstance
 
 public:
 	UToonGameInstance(const FObjectInitializer& ObjectInitializer);
-
-private:
-
 };

@@ -121,7 +121,5 @@ void AToonTankPawn::Fire()
 		TankPlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
 	}
 
-	// Call BP version of Fire
-	RecieveFire();
 }
 

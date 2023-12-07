@@ -6,9 +6,8 @@
 #include "ToonPawn.h"
 #include "ToonBattlePawn.generated.h"
 
-/**
- * 
- */
+class AToonProjectile;
+
 UCLASS()
 class TOONTANKS_API AToonBattlePawn : public AToonPawn
 {
@@ -19,7 +18,7 @@ public:
 	virtual void Fire();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void RecieveFire();
+	void RecieveFire(AToonProjectile* ProjectileFired);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecieveDestroy();
@@ -68,7 +67,7 @@ protected:
 
 	// EFFECT | PARTICLES //
 	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AToonProjectile> ProjectileClass;
+	TSubclassOf<AToonProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
 	float ProjectileDamageAmount;
