@@ -9,7 +9,6 @@ void UToonTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	TelemetryIDCount = 0;
-	TelemetryInstanceCount = 0;
 	TelemetrySaveDir = FPaths::ProjectSavedDir() + "/Telemtry/";
 
 	// Check Directory Exists. If not, create it.

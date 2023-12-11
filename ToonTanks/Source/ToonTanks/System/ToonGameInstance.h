@@ -20,4 +20,6 @@ class TOONTANKS_API UToonGameInstance : public UGameInstance
 
 public:
 	UToonGameInstance(const FObjectInitializer& ObjectInitializer);
+
+
 };

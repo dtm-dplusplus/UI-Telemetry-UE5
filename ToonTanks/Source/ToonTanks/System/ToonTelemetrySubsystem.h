@@ -42,7 +42,7 @@ public:
 // This class is essentially a csv file, all the data stored here will be exported to a csv file
 // There will be multiple instances of this class, each instance will be a different csv file based on the type of data
 // The data will be stored in a list of FToonTelemetryEvent, each event will be a row in the csv file
-UCLASS(BlueprintType, Blueprintable)
+UCLASS(BlueprintType)
 class UToonTelemetryInstance : public UObject
 {
 	GENERATED_BODY()
@@ -96,7 +96,20 @@ protected:
 	TArray<FString> Columns;
 };
 
-UCLASS(config = Telemetry)
+// This is the actor that can be spawned into the world to view active telemetry instances during run time.
+UCLASS(BlueprintType)
+class AToonTelemetryActor : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	void SpawnTelemetryActor();
+	TWeakObjectPtr<UToonTelemetryInstance> TelemetryInstance;
+
+
+};
+
+UCLASS() // Add config in future config = Telemetry
 class TOONTANKS_API UToonTelemetrySubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
@@ -133,13 +146,14 @@ public:
 	FString GetTelemetrySaveDir() { return TelemetrySaveDir; }
 
 
-
-public:
+protected:
 	FString TelemetrySaveDir;
 
 	uint8 TelemetryIDCount;
 
 	TArray<TObjectPtr<UToonTelemetryInstance>> TelemetryInstances;
+
+	bool bSpawnTelemetryActor = true;
 
 private:
 	uint8 GetNewTelemetryID() { return TelemetryIDCount++; }
