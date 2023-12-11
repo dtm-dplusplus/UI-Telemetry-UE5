@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/HUD.h"
-#include "ToonHUD.generated.h"
+#include "CommonUserWidget.h"
+#include "ToonUILayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOONTANKS_API AToonHUD : public AHUD
+class TOONTANKS_API UToonUILayer : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	
+
+	virtual void NativeConstruct() override;
+
 };
