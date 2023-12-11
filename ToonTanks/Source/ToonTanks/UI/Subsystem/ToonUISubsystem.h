@@ -19,14 +19,10 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	UFUNCTION(BlueprintCallable)
-	void PushStack(UCommonActivatableWidgetStack* WidgetStack);
+	void PushWidget(TSubclassOf<UCommonActivatableWidget> Widget);
 
 	UFUNCTION(BlueprintCallable)
-	void PushWidget(TSubclassOf<UCommonActivatableWidget> Widget, uint8 StackIndex);
+	UCommonActivatableWidget* CreatLayerWidget(TSubclassOf<UCommonActivatableWidget> LayerWidget, FString LayerName);
 
-	UFUNCTION(BlueprintCallable)
-	void CreatLayerWidget(TSubclassOf<UCommonActivatableWidget> Widget);
-
-
-	TArray<UCommonActivatableWidgetStack*> WidgetStacks;
+	TObjectPtr<UCommonActivatableWidgetStack> Stack;
 };

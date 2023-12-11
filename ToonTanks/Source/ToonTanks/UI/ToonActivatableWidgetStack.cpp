@@ -1,9 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ToonUILayer.h"
+#include "ToonActivatableWidgetStack.h"
 
-UToonUILayer::UToonUILayer()
-{
-	LayerName = "Layer";
-}

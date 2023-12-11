@@ -3,19 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
+#include "CommonUI/Public/CommonActivatableWidget.h"
 #include "ToonUILayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TOONTANKS_API UToonUILayer : public UCommonUserWidget
+class TOONTANKS_API UToonUILayer : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
 public:
+	UToonUILayer();
 
-	virtual void NativeConstruct() override;
+	void SetLayerName(FString Name) { LayerName = Name; }
 
+	FString GetLayerName() { return LayerName; }
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	FString LayerName;
 };

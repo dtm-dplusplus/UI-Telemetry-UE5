@@ -4,6 +4,7 @@
 #include "ToonUISubsystem.h"
 #include "CommonActivatableWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Engine/GameViewportClient.h"
 
 void UToonUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -15,34 +16,21 @@ void UToonUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 }
 
-void UToonUISubsystem::PushStack(UCommonActivatableWidgetStack* WidgetStack)
-{
-	if(WidgetStack->IsConstructed())
-	{
-		//WidgetStacks.Add(WidgetStack);
-		UE_LOG(LogTemp, Warning, TEXT("Pushed Stack to WidgetStacks"))
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to Push Stack to WidgetStacks"))
-	}
-}
-
-void UToonUISubsystem::PushWidget(TSubclassOf<UCommonActivatableWidget> Widget, uint8 StackIndex)
+void UToonUISubsystem::PushWidget(TSubclassOf<UCommonActivatableWidget> Widget)
 {
 	if(Widget)
 	{
-		if (WidgetStacks[StackIndex])
-		{
-			WidgetStacks[StackIndex]->AddWidget(Widget);
-
-			UE_LOG(LogTemp, Warning, TEXT("Pushed Widget to Stack"))
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to Push Widget to Stack"))
-
-		}
+		// if (WidgetStacks[StackIndex])
+		// {
+		// 	WidgetStacks[StackIndex]->AddWidget(Widget);
+		// 
+		// 	UE_LOG(LogTemp, Warning, TEXT("Pushed Widget to Stack"))
+		// }
+		// else
+		// {
+		// 	UE_LOG(LogTemp, Warning, TEXT("Failed to Push Widget to Stack"))
+		// 
+		// }
 
 
 	}
@@ -51,14 +39,19 @@ void UToonUISubsystem::PushWidget(TSubclassOf<UCommonActivatableWidget> Widget, 
 		UE_LOG(LogTemp, Warning, TEXT("Invalid Widget reference"))
 
 	}
-	
 }
 
-void UToonUISubsystem::CreatLayerWidget(TSubclassOf<UCommonActivatableWidget> Widget)
+UCommonActivatableWidget* UToonUISubsystem::CreatLayerWidget(TSubclassOf<UCommonActivatableWidget> LayerWidget, FString LayerName)
+	
 {
-	//if(auto Controller = GetGameInstance()->GetFirstLocalPlayerController())
-	//{
-	//	GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(CreateWidget(Widget)->TakeWidget());
-	//	PushWidget(Widget);
-	//}
+	if(UCommonActivatableWidget* SlateWidget = CreateWidget<UCommonActivatableWidget>(GetWorld(), LayerWidget))
+	{
+		GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(SlateWidget->TakeWidget());
+		UE_LOG(LogTemp, Warning, TEXT("Successfully CreatLayerWidget"))
+
+			return SlateWidget;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Failed to CreatLayerWidget"))
+		return nullptr;
 }
