@@ -2,56 +2,39 @@
 
 
 #include "ToonUISubsystem.h"
-#include "CommonActivatableWidget.h"
-#include "Widgets/CommonActivatableWidgetContainer.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/GameViewportClient.h"
+#include "ToonTanks/UI/ToonLayerWidget.h"
 
 void UToonUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	UE_LOG(LogTemp, Warning, TEXT("Initialised UI Subsytem"))
-
-
 }
 
-void UToonUISubsystem::PushWidget(TSubclassOf<UCommonActivatableWidget> Widget)
+void UToonUISubsystem::Deinitialize()
 {
-	if(Widget)
-	{
-		// if (WidgetStacks[StackIndex])
-		// {
-		// 	WidgetStacks[StackIndex]->AddWidget(Widget);
-		// 
-		// 	UE_LOG(LogTemp, Warning, TEXT("Pushed Widget to Stack"))
-		// }
-		// else
-		// {
-		// 	UE_LOG(LogTemp, Warning, TEXT("Failed to Push Widget to Stack"))
-		// 
-		// }
+	Super::Deinitialize();
 
-
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid Widget reference"))
-
-	}
+	Layers.Empty();
 }
 
-UCommonActivatableWidget* UToonUISubsystem::CreatLayerWidget(TSubclassOf<UCommonActivatableWidget> LayerWidget, FString LayerName)
+
+UToonLayerWidget* UToonUISubsystem::CreatLayerWidget(TSubclassOf<UToonLayerWidget> LayerWidget)
+{
+	// Create New Toon Layer Widget
+	if(UToonLayerWidget* NewLayerWidget = CreateWidget<UToonLayerWidget>(GetWorld(), LayerWidget))
+	{
+		// Create the underlying UMG UWidget. This is neccessary for the widget content to be added to viewport
+		GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(NewLayerWidget->TakeWidget());
+
+		// Add the new layer to the subsytem list. Each layer can be added to by
+		Layers.Add(NewLayerWidget);
+
+		return NewLayerWidget; 
+	}
 	
-{
-	if(UCommonActivatableWidget* SlateWidget = CreateWidget<UCommonActivatableWidget>(GetWorld(), LayerWidget))
-	{
-		GetGameInstance()->GetGameViewportClient()->AddViewportWidgetContent(SlateWidget->TakeWidget());
-		UE_LOG(LogTemp, Warning, TEXT("Successfully CreatLayerWidget"))
-
-			return SlateWidget;
-	}
-
 	UE_LOG(LogTemp, Warning, TEXT("Failed to CreatLayerWidget"))
-		return nullptr;
+
+	return nullptr;
 }

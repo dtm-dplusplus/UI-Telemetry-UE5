@@ -7,8 +7,9 @@ public class BugSplat : ModuleRules
 	public BugSplat(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PublicIncludePaths.AddRange(
+
+        //  bUsePreCompiled = true;
+        PublicIncludePaths.AddRange(
 			new string[] {
 				// ... add public include paths required here ...
 			}

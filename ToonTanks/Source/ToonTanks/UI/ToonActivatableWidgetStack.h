@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ToonActivatableWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "ToonActivatableWidgetStack.generated.h"
 
@@ -15,4 +16,5 @@ class TOONTANKS_API UToonActivatableWidgetStack : public UCommonActivatableWidge
 	GENERATED_BODY()
 
 public:
+
 };

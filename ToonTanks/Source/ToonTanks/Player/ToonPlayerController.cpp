@@ -8,6 +8,7 @@ AToonPlayerController::AToonPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
+
 }
 
 void AToonPlayerController::SetPlayerEnbaledState(const bool bPlayerEnabled)
