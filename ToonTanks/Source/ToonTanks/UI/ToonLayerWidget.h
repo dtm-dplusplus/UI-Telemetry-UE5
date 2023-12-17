@@ -23,11 +23,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UToonActivatableWidget* PushWidgetToLayer(TSubclassOf<UToonActivatableWidget> Widget);
 
-	
+	// Set the layer name for UI Subsytem functionallity. 
+	void SetLayerName(FString Name) { LayerName = Name; }
+
+	// Get the layer name for UI Subsytem functionallity. 
+	FString GetLayerName() { return LayerName; }
 
 protected:
 
-	// The name of the layer. Set by the layer name argument passed to the Subsystem CreateLayer function
+	// The name of the layer. Set by the layer name argument passed to the Subsystem CreateLayer function.
+	// The name is unique to this subsystem and has no effect on UMG or CommonUI functionallity.
 	UPROPERTY(BlueprintReadWrite)
 	FString LayerName;
 

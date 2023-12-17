@@ -16,18 +16,26 @@ class TOONTANKS_API UToonUISubsystem : public UGameInstanceSubsystem
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
 	virtual void Deinitialize() override;
-
-	// Add a widget to the layer with the corresponding layer name
-	// The Layer Name is case insensitve
-	// UFUNCTION(BlueprintCallable) 
-	// void PushWidgetToLayerName(TSubclassOf<UToonActivatableWidget> LayerWidget, FString LayerName);
-
-	// Creates a UI Layer which widget can be added to.
-	// Widgets can be added to the layer anywhere 
+	
+	// Creates a UI Layer which widgets can be added to
 	UFUNCTION(BlueprintCallable)
-	UToonLayerWidget* CreatLayerWidget(TSubclassOf<UToonLayerWidget> LayerWidget);
+	UToonLayerWidget* CreatLayerWidget(TSubclassOf<UToonLayerWidget> LayerWidget, FString LayerName);
 
+	// Add a widget to the corresponding layer by name (case insensitve)
+	UFUNCTION(BlueprintCallable)
+	UToonActivatableWidget* PushWidgetByLayerName(TSubclassOf<UToonActivatableWidget> Widget, FString LayerName);
+
+	// Returns a layer pointer if one with a macthing name can be found in the layer list
+	UFUNCTION(BlueprintCallable)
+	UToonLayerWidget* GetLayerByName(FString LayerName);
+
+	// Returns a list of the active layer names
+	UFUNCTION(BlueprintCallable)
+	TArray<FString> GetLayerNames();
+
+private:
 	// List of UI layers.
 	// Accessible in blueprint via a pointer reference to the layer or via the layer name in PushWidgetToLayerName().
 	TArray<TObjectPtr<UToonLayerWidget>> Layers;

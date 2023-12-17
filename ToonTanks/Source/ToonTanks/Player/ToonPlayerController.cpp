@@ -7,7 +7,7 @@
 AToonPlayerController::AToonPlayerController()
 {
 	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	// DefaultMouseCursor = EMouseCursor::Crosshairs;
 
 }
 

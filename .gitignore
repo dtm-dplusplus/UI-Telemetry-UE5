@@ -16,4 +16,4 @@
 */Saved/Config/CrashReportClient/**
 
 # Visual Studio
-.vs
+*/.vs
