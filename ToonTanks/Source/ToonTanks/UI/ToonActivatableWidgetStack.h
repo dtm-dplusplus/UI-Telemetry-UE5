@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToonActivatableWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "ToonActivatableWidgetStack.generated.h"
 

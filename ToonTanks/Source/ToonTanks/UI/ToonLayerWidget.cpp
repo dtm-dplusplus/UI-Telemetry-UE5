@@ -3,17 +3,29 @@
 
 #include "ToonLayerWidget.h"
 
-// Adds and activates a new widget onto the layer
+void UToonLayerWidget::InitLayer(FString Name, const int ID)
+{
+	LayerData.LayerName = Name;
+	LayerData.LayerID = ID;
+}
+
+
+
 UToonActivatableWidget* UToonLayerWidget::PushWidgetToLayer(TSubclassOf<UToonActivatableWidget> Widget)
 {
 	// Add a new widget to the layer by pushing it onto the underlying CommonActivatableStack.
 	// No need to manually activate the widget, the top most widget on the stack becomes activated by default. 
 	if(LayerStack)
 	{
-		LayerStack->AddWidget(Widget);
-		return Cast<UToonActivatableWidget>(LayerStack->GetActiveWidget());
+		if(UToonActivatableWidget* NewWidget = Cast<UToonActivatableWidget>(LayerStack->AddWidget(Widget)))
+			return NewWidget;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Layer Widget LayerStack is invalid"));
+	UE_LOG(LogTemp, Warning, TEXT("LayerStack or widget is invalid"));
 	return nullptr;
+}
+
+void UToonLayerWidget::DeactivateWidgetFromLayer()
+{
+	LayerStack->GetActiveWidget()->DeactivateWidget();
 }
