@@ -13,5 +13,4 @@ UCLASS()
 class TOONTANKS_API UToonActivatableWidget : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
-
 };
