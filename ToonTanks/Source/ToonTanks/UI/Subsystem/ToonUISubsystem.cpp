@@ -23,7 +23,7 @@ UToonLayerWidget* UToonUISubsystem::CreatLayerWidget(const TSubclassOf<UToonLaye
 	if(UToonLayerWidget* NewLayerWidget = CreateWidget<UToonLayerWidget>(GetWorld(), Widget))
 	{
 		// Set Layer properties. The ID is incremented here, ready for the next layer creation
-		NewLayerWidget->ActivateLayer(Name, LayerIDCount++);
+		NewLayerWidget->ActivateLayer(Name, GetNewLayerID());
 
 		// Add the new layer to the subsytem layer list
 		LayerList.Add(NewLayerWidget);

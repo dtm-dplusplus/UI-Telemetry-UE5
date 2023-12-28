@@ -8,21 +8,21 @@ void UToonTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
+	TelemetrySaveDir = FPaths::ProjectSavedDir() + "/Telemetry/";
 	TelemetryIDCount = 0;
-	TelemetrySaveDir = FPaths::ProjectSavedDir() + "/Telemtry/";
 
-	// Check Directory Exists. If not, create it.
+	// Check Telemetry Directory Exists. If not, create it.
 	if (IPlatformFile& FM = FPlatformFileManager::Get().GetPlatformFile(); !FM.DirectoryExists(*TelemetrySaveDir))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("TelemetryManager: TelemetrySaveDir Directory Does not exist"));
+		UE_LOG(LogTemp, Warning, TEXT("TelemetrySubsystem: Telemetry Directory Does not exist"));
 
-		if (FM.CreateDirectory(*TelemetrySaveDir))
+		if (!FM.CreateDirectory(*TelemetrySaveDir))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("TelemetryManager: Directory was created"));
+			UE_LOG(LogTemp, Warning, TEXT("TelemetrySubsystem: Telemetry Directory was created"));
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("TelemetryManager: Directory was not created"));
+			UE_LOG(LogTemp, Error, TEXT("TelemetryManager: Telemetry Directory was not created"));
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("UToonTelemetrySubsystem Initialised"))

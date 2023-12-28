@@ -214,6 +214,12 @@ private:
 	int LayerIDCount;
 
 	/**
+	 * Creates a new layer ID for 
+	 * @return	- Telemetry ID 
+	 */
+	int GetNewLayerID() { return LayerIDCount++; }
+
+	/**
 	* List of UToonLayerWidget UI layers.
 	* When layers are created in CreatLayerWidget() they are added to this
 	*/
