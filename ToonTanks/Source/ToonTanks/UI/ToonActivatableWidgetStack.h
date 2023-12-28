@@ -7,13 +7,12 @@
 #include "ToonActivatableWidgetStack.generated.h"
 
 /**
- * 
+ * Wrapper for UCommonActivatableWidgetStack
+ * In the future this can be further implemented for further control of the CommonUI
  */
 UCLASS()
 class TOONTANKS_API UToonActivatableWidgetStack : public UCommonActivatableWidgetStack
 {
 	GENERATED_BODY()
-
-public:
 
 };
