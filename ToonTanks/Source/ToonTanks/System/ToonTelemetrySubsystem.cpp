@@ -2,7 +2,49 @@
 
 
 #include "ToonTelemetrySubsystem.h"
- 
+
+bool UToonTelemetryInstance::InitializeTelemetry(const int NewID, const FString& Name, const FString& Date,
+                                                 const FString& SubDir, TArray<FString> Columns)
+{
+	// Set InstanceID
+	InstanceID = NewID;
+
+	// Set File Name
+	FileName = Name + " " + Date;
+
+	// Set File Sub Directory
+	FileSubDir = SubDir;
+
+	// Set Friendly Name
+	FriendlyName = Name;
+
+	// Set FileColumns
+	FileColumns = { "TimeStamp", "EventCategory", "EventName" };
+	for (FString Column : Columns) FileColumns.Add(Column);
+
+	// Attempt CSV file creation
+	if(!CreateCSVFile(FileName, FileColumns, "dir?"))
+	{
+		UE_LOG(LogTemp, Error, TEXT("UToonTelemetrySubsystem: Failed to create Telemetry Instance CSV File"));
+		return false;
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("UToonTelemetrySubsystem: created Telemetry Instance CSV File successfully"));
+
+	return true;
+}
+
+void UToonTelemetryInstance::SaveTelemetryEvent(const FString& EventName, const FString& EventCategory, const FDateTime EventTime)
+	
+{
+	// Write straight to file instead of saving to array
+	//FToonTelemetryEvent TelemetryEvent;
+	//TelemetryEvent.InitializeTelmetryEvent(EventTime.ToString(), EventCategory, EventName);
+	//TelemetryEvents.Add(TelemetryEvent);
+}
+
+
+
 void UToonTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -81,7 +123,7 @@ UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const F
 	// Create Telemetry Instance
 	if(const TObjectPtr<UToonTelemetryInstance> TelemetryInstance = NewObject<UToonTelemetryInstance>())
 	{
-		TelemetryInstance->InitializeTelemetry(GetNewTelemetryID(), Name, GetDateTimeToString(), SubDir);
+		TelemetryInstance->InitializeTelemetry(GetNewTelemetryID(), Name, GetDateTimeToString(), SubDir, TODO);
 		TelemetryInstances.Add(TelemetryInstance);
 
 		UE_LOG(LogTemp, Warning, TEXT("UToonTelemetrySubsystem: Created Telemetry Instance: %s"), *Name);
@@ -89,7 +131,7 @@ UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const F
 		return TelemetryInstance;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("UToonTelemetrySubsystem: CreateTelemetryInstance"));
+	UE_LOG(LogTemp, Error, TEXT("UToonTelemetrySubsystem: Failed to create Telemetry Instance"));
 
 	return nullptr;
 }

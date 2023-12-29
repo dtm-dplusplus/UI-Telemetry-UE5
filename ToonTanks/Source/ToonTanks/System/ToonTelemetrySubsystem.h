@@ -6,51 +6,51 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ToonTelemetrySubsystem.generated.h"
 
-/**
-* This is the struct that will be used to store the data for each event
-*/
-USTRUCT(BlueprintType)
-struct FToonTelemetryEvent
-{
-	GENERATED_USTRUCT_BODY()
-
-	FToonTelemetryEvent() {}
-
-	/**
-	 * Sets the event struct attributes
-	 * @param Time		- Time event occured
-	 * @param Category  - Type of event. Useful for filtering in CSV file
-	 * @param Name		- Name of the event.
-	 */
-	void InitializeTelmetryEvent(const FString& Time, const FString& Category, const FString& Name)
-	{
-		TimeStamp = Time;
-		EventCategory = Category;
-		EventName = Name;
-	}
-
-	/** Time the event occured (String Format)*/
-	UPROPERTY()
-	FString TimeStamp;
-
-	/** Category of the event being logged */
-	UPROPERTY()
-	FString EventCategory;
-
-	/** Name of the telemetry event being logged */
-	UPROPERTY()
-	FString EventName;
-};
+///**
+//* This is the struct that will be used to store the data for each event
+//*/
+//USTRUCT(BlueprintType)
+//struct FToonTelemetryEvent
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	FToonTelemetryEvent() {}
+//
+//	/**
+//	 * Sets the event struct attributes
+//	 * @param Time		- Time event occured
+//	 * @param Category  - Type of event. Useful for filtering in CSV file
+//	 * @param Name		- Name of the event.
+//	 */
+//	void InitializeTelmetryEvent(const FString& Time, const FString& Category, const FString& Name)
+//	{
+//		TimeStamp = Time;
+//		EventCategory = Category;
+//		EventName = Name;
+//	}
+//
+//	/** Time the event occured (String Format)*/
+//	UPROPERTY()
+//	FString TimeStamp;
+//
+//	/** Category of the event being logged */
+//	UPROPERTY()
+//	FString EventCategory;
+//
+//	/** Name of the telemetry event being logged */
+//	UPROPERTY()
+//	FString EventName;
+//};
 
 /**
  * The default instances created by the substem. Accessible in Blueprint
  */
-UENUM(BlueprintType)
-enum class EToonTelemetryDefaultInstance : uint8 {
-	TM_INSTANCE_MASTER       UMETA(DisplayName = "Master"),
-	TM_INSTANCE_LOCATION     UMETA(DisplayName = "Location"),
-	TM_INSTANCE_SUBSYSTEM    UMETA(DisplayName = "Subsystem"),
-};
+//UENUM(BlueprintType)
+//enum class EToonTelemetryDefaultInstance : uint8 {
+//	TM_INSTANCE_MASTER       UMETA(DisplayName = "Master"),
+//	TM_INSTANCE_LOCATION     UMETA(DisplayName = "Location"),
+//	TM_INSTANCE_SUBSYSTEM    UMETA(DisplayName = "Subsystem"),
+//};
 
 /**
 * Instances of this class represents a csv file, all the data stored here will be exported to a csv file
@@ -63,15 +63,18 @@ class UToonTelemetryInstance : public UObject
 	GENERATED_BODY()
 
 public:
-	
+	/**
+	 * Default Constructor. Values -1 indicate this instance has not been initialized.
+	 */
 	UToonTelemetryInstance()
 	{
-		InstanceID = 0;
-		FriendlyName = "Telemetry";
-		FileName = "Telemetry";
+		InstanceID = -1;
+		RowIndex = -1;
+		FriendlyName = "Not Initialized Telemetry";
+		FileName = "Not Initialized Telemetry";
 		FileSubDir = "";
-		Columns.Add("TimeStamp, Category, Event");
-		TelemetryEvents = TArray<FToonTelemetryEvent>();
+		FileColumns.Add("TimeStamp, Category, Event");
+		// TelemetryEvents = TArray<FToonTelemetryEvent>();
 	}
 
 	/**
@@ -82,41 +85,30 @@ public:
 	* @args SubDir	- Optional Subdirectory name. Useful if you have lots of telemetry instances
 	*/
 	UFUNCTION(BlueprintCallable)
-	void InitializeTelemetry(const int NewID, const FString& Name, const FString& Date, const FString& SubDir = "");
-	{
-		// Set InstanceID
-		InstanceID = NewID;
-
-		// Set File Name
-		FileName = Name + " " + Date;
-
-		// Set File Sub Directory
-		FileSubDir = SubDir;
-
-		// Set Friendly Name
-		FriendlyName = Name;
-
-		// Set Columns
-		Columns = { "TimeStamp", "EventCategory", "EventName" };
-	}
+	bool InitializeTelemetry(const int NewID, const FString& Name, const FString& Date, const FString& SubDir = "",
+	                         TArray<FString> Columns);
 
 	/**
-	* 
-	* @param EventName 
-	* @param EventCategory 
-	* @param EventTime 
-	*/
-	void CreateTelemetryEvent(const FString& EventName, const FString& EventCategory, const FDateTime EventTime)
-	{
-		FToonTelemetryEvent TelemetryEvent;
-		TelemetryEvent.InitializeTelmetryEvent(EventTime.ToString(), EventCategory, EventName);
-		TelemetryEvents.Add(TelemetryEvent);
-	}
+	 * 
+	 * @param EventName 
+	 * @param EventCategory 
+	 * @param EventTime 
+	 */
+	void SaveTelemetryEvent(const FString& EventName, const FString& EventCategory, const FDateTime EventTime);
 
-	bool CreateCSVFile(const FString& FileName, const FString& FileColumns, const FString& FileSaveDir) const
+	/**
+	 * 
+	 * @param FileName 
+	 * @param FileColumns 
+	 * @param FileSaveDir 
+	 * @return 
+	 */
+	bool CreateCSVFile(const FString& FileName, TArray<FString> FileColumns, const FString& FileSaveDir) const
 	{
-		// Create and write to CSV File
-		if (!FFileHelper::SaveStringToFile(FileColumns, *FString(FileSaveDir + FileName + ".csv")))
+		// Create CSV File
+
+		// Write Columns
+		if (!FFileHelper::SaveStringToFile(FileColumns[0], *FString(FileSaveDir + FileName + ".csv")))
 		{
 			UE_LOG(LogTemp, Error, TEXT("TelemetryManager: CSV File was not created"));
 			return false;
@@ -126,6 +118,7 @@ public:
 
 		return true;
 	}
+
 	/**
 	* 
 	* @return 
@@ -152,45 +145,60 @@ public:
 	* @return
 	*/
 	UFUNCTION(BlueprintGetter)
-	TArray<FString> GetColumns() { return Columns; }
+	TArray<FString> GetColumns() { return FileColumns; }
 
 	/**
 	*
 	* @return
 	*/
-	UFUNCTION(BlueprintGetter)
-	TArray<FToonTelemetryEvent> GetEvents() { return TelemetryEvents; }
+	/*UFUNCTION(BlueprintGetter)
+	TArray<FToonTelemetryEvent> GetEvents() { return TelemetryEvents; }*/
 	
 protected:
 	/** Unique Telemetry Instance InstanceID */
+	UPROPERTY(BlueprintReadOnly)
 	int InstanceID;
+
+	/** Pointer index to the last row that was written to*/
+	UPROPERTY(BlueprintReadOnly)
+	int RowIndex;
 
 	/** User Friendly File Name.
 	* When generating the csv file, date and time will be appended to the file name
 	*/
+	UPROPERTY(BlueprintReadOnly)
 	FString FriendlyName;
 
 	/**
 	* Name of the csv file to be generted by the telemetry manager
 	*/
+	UPROPERTY(BlueprintReadOnly)
 	FString FileName;
 
 	/**
 	* The subdirectry if the user wants to save the file in a subdirectory. null by default
 	*/
+	UPROPERTY(BlueprintReadOnly)
 	FString FileSubDir;
 
 	/**
 	* The subdirectry if the user wants to save the file in a subdirectory. null by default
 	*/
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
-	TArray<FToonTelemetryEvent> TelemetryEvents;
+	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+	TArray<FToonTelemetryEvent> TelemetryEvents;*/
 
 	/**
 	* The subdirectry if the user wants to save the file in a subdirectory. null by default
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FString> Columns;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FString> FileColumns;
+
+private:
+	/**
+	* Returns index to the next row to be written to
+	* @return New Row Index
+	*/
+	int GetNewRowIndex() { return ++RowIndex; }
 };
 
 /**
@@ -220,6 +228,7 @@ public:
 
 	/**
 	 * 
+	 * @param DateTime
 	 * @param TelemeteryInstance 
 	 * @return 
 	 */
@@ -247,20 +256,20 @@ public:
 	 * @param TelemeteryInstance 
 	 * @return 
 	 */
-	UFUNCTION(BlueprintGetter)
-	static FString CreateStringFromTelemeteryInstance(UToonTelemetryInstance* TelemeteryInstance)
-	{
-		// Set First Line to columns
-		FString WriteString = GetListToCSVString(TelemeteryInstance->GetColumns()); // Writes columns to first line
+	//UFUNCTION(BlueprintGetter)
+	//static FString CreateStringFromTelemeteryInstance(UToonTelemetryInstance* TelemeteryInstance)
+	//{
+	//	// Set First Line to columns
+	//	FString WriteString = GetListToCSVString(TelemeteryInstance->GetColumns()); // Writes columns to first line
 
-		// Write rest of the rows/lines
-		// This is hard coded for now, but will be changed to be dynamic.
-		// Currently only supports default columns
-		for (FToonTelemetryEvent& Entry : TelemeteryInstance->GetEvents())
-			WriteString += GetListToCSVString({ Entry.TimeStamp, Entry.EventCategory, Entry.EventName });
+	//	// Write rest of the rows/lines
+	//	// This is hard coded for now, but will be changed to be dynamic.
+	//	// Currently only supports default columns
+	//	for (FToonTelemetryEvent& Entry : TelemeteryInstance->GetEvents())
+	//		WriteString += GetListToCSVString({ Entry.TimeStamp, Entry.EventCategory, Entry.EventName });
 
-		return WriteString;
-	}
+	//	return WriteString;
+	//}
 
 	/**
 	 * Converts a FDateTime to a string
@@ -268,7 +277,7 @@ public:
 	 * @return 
 	 */
 	UFUNCTION(BlueprintGetter)
-	static FString GetDateTimeToString(const FDateTime DateTime = FDateTime::Now())
+	static FString GetDateTimeToString(const FDateTime DateTime)
 	{
 		const FString Day = FString::FromInt(DateTime.GetDay());
 		const FString Month = FString::FromInt(DateTime.GetMonth());
@@ -278,6 +287,12 @@ public:
 		const FString Second = FString::FromInt(DateTime.GetSecond());
 
 		return Day + "-" + Month + "-" + Year + "_" + Hour + "-" + Minute + "-" + Second;
+	}
+
+	UFUNCTION(BlueprintGetter)
+	static FString GetDateTimeNowToString(const FDateTime DateTime)
+	{
+		return GetDateTimeToString(FDateTime::Now());
 	}
 
 	/**
