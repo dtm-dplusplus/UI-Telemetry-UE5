@@ -3,9 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToonTelemetryHelper.h"
 #include "ToonTelemetryInstance.generated.h"
-
 
 /**
 * Instances of this class represents a csv file, all the data stored here will be exported to a csv file
@@ -18,33 +16,28 @@ class TOONTANKS_API UToonTelemetryInstance : public UObject
 	GENERATED_BODY()
 
 public:
-	/**
-	 * Default Constructor. Values -1 indicate this instance has not been initialized.
-	 */
-	UToonTelemetryInstance()
-	{
-		InstanceID = -1;
-		FileDir = "";
-		FilePath = "";
-		FileName = "";
-		FileColumns = {};
-	}
+	UToonTelemetryInstance();
 
 	/**
 	* Sets the key attributes for the telemetry instance
-	* @args NewID	- The Unique ID of this instance, set by the subsystem
-	* @args Name	- The Unique Name of ths instance, set by the user
-	* @args Date	- The date of creation, written to the file name
-	* @args SubDir	- Optional Subdirectory name. Useful if you have lots of telemetry instances
+	*
+	* @args NewID			- The Unique ID of this instance, set by the subsystem
+	* @args Name			- The Unique Name of ths instance, set by the user
+	* @args CustomColumns	- Optional Custom columns provided by the user
+	* @return				- true if initialization successful
 	*/
-	bool InitializeTelemetry(const int NewID, const FString& Name,
-	                         const TArray<FString> CustomColumns);
+	bool InitializeInstance(const int NewID, const FString& Name, const TArray<FString>& CustomColumns);
 
-	
-
-	UFUNCTION(BlueprintCallable)
-	void SaveEvent(const FString& EventName, const FString& EventCategory,
-		const TArray<FString>& CustomColumnValues);
+	/**
+	* Saves event data to the instance's CSV file
+	* Custom column data must be passed as a TArray
+	*
+	* @param EventName			- Name of the event
+	* @param EventCategory		- Category of the event
+	* @param CustomColumnData	- Aditional data from the event.
+	*/
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta = (AutoCreateRefTerm = "CustomColumnData"))
+	void SaveEvent(const FString& EventName, const FString& EventCategory, const TArray<FString>& CustomColumnData) const;
 
 protected:
 	/** Unique Telemetry Instance InstanceID */
@@ -52,43 +45,27 @@ protected:
 	int InstanceID;
 
 	/**
-	* Name of the csv file to be generted by the telemetry manager
+	* Name of the instance's CSV file
 	*/
 	UPROPERTY(BlueprintReadOnly)
 	FString FileName;
 
 	/**
-	*
+	* The directory the instance's CSV file is located in
 	*/
 	UPROPERTY(BlueprintReadOnly)
 	FString FileDir;
 
 	/**
-	* 
+	* The full path to the instance's CSV file
 	*/
 	UPROPERTY(BlueprintReadOnly)
 	FString FilePath;
 
 	/**
-	* The Column names used in this instances CSV File
+	* The Column names used in this instance's CSV file
+	* This can include custom columns set by the user
 	*/
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FString> FileColumns;
-
-private:
-	bool WriteRowToFile(const FString& Row) const
-	{
-		// Write Row To File
-		if (!FFileHelper::SaveStringToFile(Row, *FilePath,
-			FFileHelper::EEncodingOptions::AutoDetect,
-			&IFileManager::Get(),
-			FILEWRITE_Append)
-			)
-		{
-			UE_LOG(ToonTelemetry, Error, TEXT("Error - Write to CSV File %s"), *FilePath);
-			return false;
-		}
-
-		return true;
-	}
 };

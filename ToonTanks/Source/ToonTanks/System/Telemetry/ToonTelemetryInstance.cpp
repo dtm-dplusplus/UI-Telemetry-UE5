@@ -1,28 +1,33 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ToonTelemetryInstance.h"
+#include "ToonTelemetryHelper.h"
 
-bool UToonTelemetryInstance::InitializeTelemetry(const int NewID, const FString& Name,
-	const TArray<FString> CustomColumns)
+UToonTelemetryInstance::UToonTelemetryInstance()
 {
-	// Set InstanceID
+	InstanceID = -1;
+	FileDir = "";
+	FilePath = "";
+	FileName = "";
+	FileColumns = {};
+}
+
+bool UToonTelemetryInstance::InitializeInstance(const int NewID, const FString& Name,
+                                                const TArray<FString>& CustomColumns)
+{
+	// Set Instance Attributes
 	InstanceID = NewID;
 
-	// Set File Directory
 	FileDir = UToonTelemetryHelper::GetTelemetryDirectory();
 
-	// Set File Name
 	FileName = Name + " " + UToonTelemetryHelper::GetDateTimeNowToString(true);
 
-	// Set File Path
 	FilePath = FileDir + FileName + ".csv";
 
-	// Add Colums to FileColumns
 	FileColumns = CustomColumns;
 
 	// Create CSV file with column names
-	if (!WriteRowToFile(UToonTelemetryHelper::GetListToCSVString(CustomColumns)))
+	if (!UToonTelemetryHelper::WriteRowToFile(UToonTelemetryHelper::GetStringListToCSVString(FileColumns), FilePath))
 	{
 		UE_LOG(ToonTelemetry, Error, TEXT("Error - Create Telemetry Instance CSV File"));
 		return false;
@@ -33,16 +38,13 @@ bool UToonTelemetryInstance::InitializeTelemetry(const int NewID, const FString&
 	return true;
 }
 
-
-
 void UToonTelemetryInstance::SaveEvent(const FString& EventName, const FString& EventCategory,
-	const TArray<FString>& CustomColumnValues)
+	const TArray<FString>& CustomColumnData) const
 {
-	//// Save List to string - Default first, then additional columns
+	// Save List to string - Default first, then additional columns
 	TArray ColumnData = { UToonTelemetryHelper::GetDateTimeNowToString(), EventName, EventCategory };
-	ColumnData.Append(CustomColumnValues);
+	ColumnData.Append(CustomColumnData);
 
-	//// Write Row to file
-	WriteRowToFile(UToonTelemetryHelper::GetListToCSVString(ColumnData));
-
+	// Write Row to file
+	UToonTelemetryHelper::WriteRowToFile(UToonTelemetryHelper::GetStringListToCSVString(ColumnData), FilePath);
 }

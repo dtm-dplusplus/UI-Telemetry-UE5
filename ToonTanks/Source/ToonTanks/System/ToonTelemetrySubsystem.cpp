@@ -13,7 +13,10 @@ void UToonTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	// Init telemetry attributes
 	TelemetryIDCount = 0;
 
-	// Check Telemetry Directory Exists. If not, create it.
+
+	// Initialize Telemetry Directory
+	UToonTelemetryHelper::InitializeTelemetryDirectory();
+
 	if (IPlatformFile& FM = FPlatformFileManager::Get().GetPlatformFile(); !FM.DirectoryExists(*UToonTelemetryHelper::GetTelemetryDirectory()))
 	{
 		UE_LOG(ToonTelemetry, Warning, TEXT("Telemetry Directory Does not exist"));
@@ -38,17 +41,17 @@ void UToonTelemetrySubsystem::Deinitialize()
 	UE_LOG(ToonTelemetry, Display, TEXT("UToonTelemetrySubsystem Deinitialised"))
 }
 
-UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const FString& Name, TArray<FString> ExtraColumns)
+UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const FString& Name, TArray<FString> CustomColumns)
 {
 	UE_LOG(ToonTelemetry, Display, TEXT("Creating Toon Telemetry Instance"));
 
 	// Check Instance Data complies with Telemetry Systetm Requirements
-	if(!ValidTelemetryInstance(Name, ExtraColumns)) return nullptr;
+	if(!ValidTelemetryInstance(Name, CustomColumns)) return nullptr;
 
 	// Create Telemetry Instance
 	if(const TObjectPtr<UToonTelemetryInstance> TelemetryInstance = NewObject<UToonTelemetryInstance>())
 	{
-		TelemetryInstance->InitializeTelemetry(GetNewTelemetryID(), Name, ExtraColumns);
+		TelemetryInstance->InitializeInstance(GetNewTelemetryID(), Name, CustomColumns);
 		TelemetryInstances.Add(TelemetryInstance);
 
 		UE_LOG(ToonTelemetry, Display, TEXT("Success - Create Telemetry Instance %s"), *Name);
@@ -63,7 +66,7 @@ UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const F
 	return nullptr;
 }
 
-bool UToonTelemetrySubsystem::ValidTelemetryInstance(const FString& Name, TArray<FString>& ExtraColumns)
+bool UToonTelemetrySubsystem::ValidTelemetryInstance(const FString& Name, TArray<FString>& CustomColumns)
 {
 	// Check File Name is valid
 	if (FText Error; !FFileHelper::IsFilenameValidForSaving(Name, Error))
@@ -76,11 +79,9 @@ bool UToonTelemetrySubsystem::ValidTelemetryInstance(const FString& Name, TArray
 
 	UE_LOG(ToonTelemetry, Display, TEXT("Success - Instance Name %s Validation "), *Name);
 
-	UE_LOG(ToonTelemetry, Display, TEXT("Success - SubDirectory %s Validation "), *Name);
-
 	// Check Additional Columns are valid
-	ExtraColumns.Insert(UToonTelemetryHelper::GetDefaultColumns(), 0);
-	for (const FString& Column : ExtraColumns)
+	CustomColumns.Insert(UToonTelemetryHelper::GetDefaultColumns(), 0);
+	for (const FString& Column : CustomColumns)
 	{
 		if (FText Error; !FFileHelper::IsFilenameValidForSaving(Column, Error))
 		{

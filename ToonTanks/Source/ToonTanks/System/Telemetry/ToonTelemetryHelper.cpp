@@ -5,4 +5,9 @@
 
 DEFINE_LOG_CATEGORY(ToonTelemetry)
 
-FString UToonTelemetryHelper::TelemetrySessionDate{ GetDateTimeNowToString(true) };
+FString UToonTelemetryHelper::SessionDate{};
+
+void UToonTelemetryHelper::InitializeTelemetryDirectory()
+{
+	SessionDate = GetDateTimeNowToString(true);
+}
