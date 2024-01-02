@@ -6,11 +6,11 @@
 
 
 #include "Kismet/GameplayStatics.h"
-#include "ToonTanks/GameModes/ToonGameMode.h"
+#include "../GameMode/ToonGameMode.h"
 
 UToonHealthComponent::UToonHealthComponent()
 {
-	
+
 	PrimaryComponentTick.bCanEverTick = true;
 
 

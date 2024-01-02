@@ -3,22 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToonBattlePawn.h"
-#include "ToonTankPawn.generated.h"
+#include "ToonPawn.h"
+#include "ToonPlayerPawn.generated.h"
 
 class UInputAction;
 struct FInputActionValue;
 class UCameraShakeBase;
-/**
- * 
- */
+
 UCLASS()
-class TOONTANKS_API AToonTankPawn : public AToonBattlePawn
+class TOONTANKS_API AToonPlayerPawn : public AToonPawn
 {
 	GENERATED_BODY()
 
+
 public:
-	AToonTankPawn();
+	AToonPlayerPawn();
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -80,4 +79,5 @@ private:
 
 	// Called to bind functionality to input
 	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 };

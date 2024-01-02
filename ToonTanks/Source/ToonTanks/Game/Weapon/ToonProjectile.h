@@ -11,7 +11,7 @@ class TOONTANKS_API AToonProjectile : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	AToonProjectile();
 
@@ -55,5 +55,4 @@ private:
 	// EFFECT | CAMERA //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> HitCameraShakeClass;
-
 };

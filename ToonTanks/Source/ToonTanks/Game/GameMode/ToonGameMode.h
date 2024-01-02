@@ -53,10 +53,15 @@ public:
 	FString ProjectileType;
 };
 
+/**
+ * 
+ */
 UCLASS()
 class TOONTANKS_API AToonGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+	
+
 public:
 	void ActorDied(AActor* DeadActor);
 
@@ -66,7 +71,7 @@ public:
 	void BeginPlay() override;
 	void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
-	
+
 
 	int32 GetEnemiesAliveCount() const;
 
@@ -83,7 +88,7 @@ public:
 private:
 	// Player reference
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class AToonTankPawn> PlayerTank;
+	TObjectPtr<class AToonPlayerPawn> PlayerTank;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "TankGameMode", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AToonPlayerController> TankPlayerController;

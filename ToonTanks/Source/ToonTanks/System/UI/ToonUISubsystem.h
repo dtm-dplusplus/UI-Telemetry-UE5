@@ -80,10 +80,10 @@ public:
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("Layer could not be found. Failed to add widget"))
-		return nullptr;
+			return nullptr;
 	}
 
-	
+
 
 	/**
 	* Deactivates the layer with matching name
@@ -214,8 +214,8 @@ private:
 	int LayerIDCount;
 
 	/**
-	 * Creates a new layer ID for 
-	 * @return	- Telemetry ID 
+	 * Creates a new layer ID for
+	 * @return	- Telemetry ID
 	 */
 	int GetNewLayerID() { return LayerIDCount++; }
 

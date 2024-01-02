@@ -1,16 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ToonBattlePawn.h"
+#include "toonpawn.h"
 
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "../Weapon/ToonProjectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "ToonHealthComponent.h"
-#include "ToonTanks/Weapons/ToonProjectile.h"
 
 // Sets default values
-AToonBattlePawn::AToonBattlePawn()
+AToonPawn::AToonPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,7 +32,7 @@ AToonBattlePawn::AToonBattlePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
-	//HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
+	// HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
 
 	// Set properties of base pawn
 	TurretInterpRate = 10.f;
@@ -41,7 +40,7 @@ AToonBattlePawn::AToonBattlePawn()
 }
 
 // Called when the game starts or when spawned
-void AToonBattlePawn::BeginPlay()
+void AToonPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -50,13 +49,13 @@ void AToonBattlePawn::BeginPlay()
 }
 
 // Called every frame
-void AToonBattlePawn::Tick(float DeltaTime)
+void AToonPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 
-void AToonBattlePawn::RotateTurret(const FVector& LookAtTarget)
+void AToonPawn::RotateTurret(const FVector& LookAtTarget)
 {
 	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
 
@@ -73,13 +72,13 @@ void AToonBattlePawn::RotateTurret(const FVector& LookAtTarget)
 			TurretInterpRate));
 }
 
-void AToonBattlePawn::Fire()
+void AToonPawn::Fire()
 {
 	ProjetcilesFired++;
 
 	// Spawn Projectile actor
 	const auto projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
-	
+
 	// Set projectile properties
 	projectile->SetDamageAmount(ProjectileDamageAmount);
 	projectile->SetOwner(this);
@@ -87,7 +86,7 @@ void AToonBattlePawn::Fire()
 	RecieveFire(projectile);
 }
 
-void AToonBattlePawn::OnDestroy()
+void AToonPawn::OnDestroy()
 {
 	// Spawn death particls
 	if (DeathParticles)

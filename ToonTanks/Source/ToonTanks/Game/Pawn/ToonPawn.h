@@ -3,17 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToonPawn.h"
-#include "ToonBattlePawn.generated.h"
+#include "GameFramework/Pawn.h"
+#include "ToonPawn.generated.h"
 
 class AToonProjectile;
 
+
 UCLASS()
-class TOONTANKS_API AToonBattlePawn : public AToonPawn
+class TOONTANKS_API AToonPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
+	AToonPawn();
+
 	virtual void OnDestroy();
 	virtual void Fire();
 
@@ -35,9 +38,8 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	int32 EnemiesKilled;
-	
+
 protected:
-	AToonBattlePawn();
 	virtual void BeginPlay() override;
 
 	// Actions //
@@ -62,8 +64,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class UToonHealthComponent> HealthComponent;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UToonHealthComponent> HealthComponent;*/
 
 	// EFFECT | PARTICLES //
 	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))

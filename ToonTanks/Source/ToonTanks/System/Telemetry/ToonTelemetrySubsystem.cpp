@@ -2,8 +2,8 @@
 
 
 #include "ToonTelemetrySubsystem.h"
-#include "Telemetry/ToonTelemetryInstance.h"
-#include "Telemetry/ToonTelemetryHelper.h"
+#include "ToonTelemetryInstance.h"
+#include "ToonTelemetryHelper.h"
 
 
 void UToonTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -46,10 +46,10 @@ UToonTelemetryInstance* UToonTelemetrySubsystem::CreateTelemetryInstance(const F
 	UE_LOG(ToonTelemetry, Display, TEXT("Creating Toon Telemetry Instance"));
 
 	// Check Instance Data complies with Telemetry Systetm Requirements
-	if(!ValidTelemetryInstance(Name, CustomColumns)) return nullptr;
+	if (!ValidTelemetryInstance(Name, CustomColumns)) return nullptr;
 
 	// Create Telemetry Instance
-	if(const TObjectPtr<UToonTelemetryInstance> TelemetryInstance = NewObject<UToonTelemetryInstance>())
+	if (const TObjectPtr<UToonTelemetryInstance> TelemetryInstance = NewObject<UToonTelemetryInstance>())
 	{
 		TelemetryInstance->InitializeInstance(GetNewTelemetryID(), Name, CustomColumns);
 		TelemetryInstances.Add(TelemetryInstance);

@@ -7,12 +7,12 @@
 #include "ToonHealthComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOONTANKS_API UToonHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UToonHealthComponent();
 
 	UFUNCTION()
@@ -33,4 +33,5 @@ private:
 	float Health = MaxHealth;
 
 	TObjectPtr<class AToonGameMode> ToonTankGameMode;
+		
 };

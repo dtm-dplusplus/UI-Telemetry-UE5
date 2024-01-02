@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ToonTowerPawn.h"
+#include "ToonEnemyPawn.h"
 
-#include "ToonTankPawn.h"
+#include "ToonPlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 
-AToonTowerPawn::AToonTowerPawn()
+AToonEnemyPawn::AToonEnemyPawn()
 {
 	FireRange = 1000.f;
 	FireRate = 2.f;
@@ -14,17 +14,17 @@ AToonTowerPawn::AToonTowerPawn()
 }
 
 
-void AToonTowerPawn::BeginPlay()
+void AToonEnemyPawn::BeginPlay()
 {
-	 Super::BeginPlay();
+	Super::BeginPlay();
 
-	PlayerTank = Cast<AToonTankPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerTank = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AToonTowerPawn::CheckFireCondition, FireRate, true);
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AToonEnemyPawn::CheckFireCondition, FireRate, true);
 }
 
 
-void AToonTowerPawn::Tick(float DeltaTime)
+void AToonEnemyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -37,12 +37,12 @@ void AToonTowerPawn::Tick(float DeltaTime)
 	}
 }
 
-bool AToonTowerPawn::InFireRange()
+bool AToonEnemyPawn::InFireRange()
 {
 	return DistanceToTank <= FireRange ? true : false;
 }
 
-void AToonTowerPawn::CheckFireCondition()
+void AToonEnemyPawn::CheckFireCondition()
 {
 	if (PlayerTank)
 	{

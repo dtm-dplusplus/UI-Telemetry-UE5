@@ -3,17 +3,15 @@
 
 #include "ToonGameMode.h"
 
-// Fill out your copyright notice in the Description page of Project Settings.
-
+#include "../Pawn/ToonEnemyPawn.h"
+#include "../Pawn/ToonPlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "ToonTanks/Character/ToonTankPawn.h"
-#include "ToonTanks/Character/ToonTowerPawn.h"
 #include "Windows/WindowsPlatformCrashContext.h"
 #include "ToonTanks/Player/ToonPlayerController.h"
 
 void AToonGameMode::ActorDied(AActor* DeadActor)
 {
-	if (AToonTowerPawn* deadTower = Cast<AToonTowerPawn>(DeadActor))
+	if (AToonEnemyPawn* deadTower = Cast<AToonEnemyPawn>(DeadActor))
 	{
 		deadTower->OnDestroy();
 		EnemiesAliveCount--;
@@ -28,7 +26,7 @@ void AToonGameMode::ActorDied(AActor* DeadActor)
 		TankPlayerController->SetPlayerEnbaledState(false);
 		GameOver(false);
 	}
-	 
+
 }
 
 void AToonGameMode::BeginPlay()
@@ -41,7 +39,7 @@ void AToonGameMode::BeginPlay()
 	EnemiesAliveCount = GetEnemiesAliveCount();
 
 	// // Get tank player and controller
-	PlayerTank = Cast<AToonTankPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerTank = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	TankPlayerController = Cast<AToonPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 
 	// BP Event for designers. Start Game start timer. Adds UI widgets to viewport
@@ -58,7 +56,7 @@ void AToonGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 int32 AToonGameMode::GetEnemiesAliveCount() const
 {
 	TArray<AActor*> towers;
-	UGameplayStatics::GetAllActorsOfClass(this, AToonTowerPawn::StaticClass(), towers);
+	UGameplayStatics::GetAllActorsOfClass(this, AToonEnemyPawn::StaticClass(), towers);
 
 	return towers.Num();
 }

@@ -3,28 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToonBattlePawn.h"
-#include "ToonTowerPawn.generated.h"
+#include "ToonPawn.h"
+#include "GameFramework/Pawn.h"
+#include "ToonEnemyPawn.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class TOONTANKS_API AToonTowerPawn : public AToonBattlePawn
+class TOONTANKS_API AToonEnemyPawn : public AToonPawn
 {
 	GENERATED_BODY()
 
 public:
-	AToonTowerPawn();
-
+	AToonEnemyPawn();
 	void CheckFireCondition();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Tower", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class AToonTankPawn> PlayerTank;
+	TObjectPtr<class AToonPlayerPawn> PlayerTank;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Tower", meta = (AllowPrivateAccess = "true"))
 	FVector TankPlayerLocation;

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ToonTankPawn.h"
+#include "ToonPlayerPawn.h"
 
 // Fill out your copyright notice in the Description page of Project Settings.
 
@@ -12,10 +12,9 @@
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-AToonTankPawn::AToonTankPawn()
+AToonPlayerPawn::AToonPlayerPawn()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
 	SpringArm->SetupAttachment(RootComponent);
@@ -26,24 +25,24 @@ AToonTankPawn::AToonTankPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
-	bAlive = true;
+	//bAlive = true;
 
 	MovementSpeed = 300.0f;
 	TurnSpeed = 150.0f;
 	LookSpeed = 50.0f;
 
-	ProjectileDamageAmount = 40.f;
+	//ProjectileDamageAmount = 40.f;
 
 }
 
-void AToonTankPawn::BeginPlay()
+void AToonPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+
 }
 
-void AToonTankPawn::Tick(float DeltaTime)
+void AToonPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -52,7 +51,7 @@ void AToonTankPawn::Tick(float DeltaTime)
 
 
 // Called to bind functionality to input
-void AToonTankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AToonPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent); //Call the parent version
 
@@ -69,12 +68,12 @@ void AToonTankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	const auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	//Bind to the mapping
-	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonTankPawn::Move);
-	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonTankPawn::Turn);
-	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonTankPawn::Fire);
+	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Move);
+	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Turn);
+	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
 }
 
-void AToonTankPawn::OnDestroy()
+void AToonPlayerPawn::OnDestroy()
 {
 	// Shake camera on death
 	if (DeathCameraShakeClass)
@@ -88,23 +87,23 @@ void AToonTankPawn::OnDestroy()
 	bAlive = false;
 }
 
-void AToonTankPawn::Move(const FInputActionValue& Value)
+void AToonPlayerPawn::Move(const FInputActionValue& Value)
 {
 	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
 	const float deltaLocation = MovementSpeed * Value.Get<float>() * deltaTime;
 	AddActorLocalOffset(FVector(deltaLocation, 0.0f, 0.0f));
 }
 
-void AToonTankPawn::Turn(const FInputActionValue& Value)
+void AToonPlayerPawn::Turn(const FInputActionValue& Value)
 {
 	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
 	const float deltaRotation = TurnSpeed * Value.Get<float>() * deltaTime;
 	AddActorLocalRotation(FRotator(0.0f, deltaRotation, 0.0f), true);
 }
 
-void AToonTankPawn::Look()
+void AToonPlayerPawn::Look()
 {
-	if(TankPlayerController)
+	if (TankPlayerController)
 	{
 		FHitResult hitResult;
 		TankPlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
@@ -112,7 +111,7 @@ void AToonTankPawn::Look()
 	}
 }
 
-void AToonTankPawn::Fire()
+void AToonPlayerPawn::Fire()
 {
 	Super::Fire();
 
