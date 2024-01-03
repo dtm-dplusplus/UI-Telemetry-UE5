@@ -3,6 +3,9 @@
 
 #include "ToonProjectile.h"
 
+#include "Camera/CameraShakeBase.h"
+#include "GameFramework/DamageType.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -49,6 +52,8 @@ void AToonProjectile::BeginPlay()
 void AToonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hit Object"))
+
 	// Play Hit sound
 	if (HitSound)
 	{
@@ -68,13 +73,16 @@ void AToonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	if (OtherActor && OtherActor != this && OtherActor != myOwner)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, myOwnerInstigator, this, damageTypeClass);
+		
+		if(float d = UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, myOwnerInstigator, this, damageTypeClass))
+			UE_LOG(LogTemp, Warning, TEXT("Applied %f damage to %s"), d, *OtherActor->GetName())
 		if (HitParticles)
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 
 		if (HitCameraShakeClass)
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
+
 	Destroy();
 }
 

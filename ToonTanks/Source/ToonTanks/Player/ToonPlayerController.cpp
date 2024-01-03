@@ -11,7 +11,7 @@ AToonPlayerController::AToonPlayerController()
 
 }
 
-void AToonPlayerController::SetPlayerEnbaledState(const bool bPlayerEnabled)
+void AToonPlayerController::SetPlayerInputState(const bool bPlayerEnabled)
 {
 	if (bPlayerEnabled)
 	{

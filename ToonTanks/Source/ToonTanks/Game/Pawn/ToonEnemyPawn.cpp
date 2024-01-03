@@ -10,15 +10,14 @@ AToonEnemyPawn::AToonEnemyPawn()
 {
 	FireRange = 1000.f;
 	FireRate = 2.f;
-	ProjectileDamageAmount = 10.f;
+	ProjectileDamage = 10.f;
 }
 
 
 void AToonEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerTank = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerPawn = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &AToonEnemyPawn::CheckFireCondition, FireRate, true);
 }
@@ -28,8 +27,15 @@ void AToonEnemyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	TankPlayerLocation = PlayerTank->GetActorLocation();
-	DistanceToTank = FVector::Dist(GetActorLocation(), TankPlayerLocation);
+	if(PlayerPawn)
+	{
+		TankPlayerLocation = PlayerPawn->GetActorLocation();
+		DistanceToTank = FVector::Dist(GetActorLocation(), TankPlayerLocation);
+	}
+	else
+	{
+		PlayerPawn = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	}
 
 	if (InFireRange())
 	{
@@ -44,7 +50,7 @@ bool AToonEnemyPawn::InFireRange()
 
 void AToonEnemyPawn::CheckFireCondition()
 {
-	if (PlayerTank)
+	if (PlayerPawn)
 	{
 		if (InFireRange())
 		{

@@ -11,22 +11,18 @@
 
 void AToonGameMode::ActorDied(AActor* DeadActor)
 {
-	if (AToonEnemyPawn* deadTower = Cast<AToonEnemyPawn>(DeadActor))
+	// Destory the actor and notifty blueprint of the actor type for game state logic
+	if (AToonEnemyPawn* DeadTower = Cast<AToonEnemyPawn>(DeadActor))
 	{
-		deadTower->OnDestroy();
+		DeadTower->OnDestroy();
 		EnemiesAliveCount--;
-		RecieveActorDied(false);
-
-		if (EnemiesAliveCount == 0) GameOver(true);
+		BP_ActorDied(false);
 	}
-	else if (DeadActor == PlayerTank)
+	else if (DeadActor == PlayerPawn)
 	{
-		PlayerTank->OnDestroy();
-		RecieveActorDied(false);
-		TankPlayerController->SetPlayerEnbaledState(false);
-		GameOver(false);
+		PlayerPawn->OnDestroy();
+		BP_ActorDied(true);
 	}
-
 }
 
 void AToonGameMode::BeginPlay()
@@ -34,35 +30,30 @@ void AToonGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	// Adds game data to crash context
-	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonTankGameMode"));
+	FPlatformCrashContext::SetGameData(TEXT("GameMode"), TEXT("ToonGameMode"));
 
 	EnemiesAliveCount = GetEnemiesAliveCount();
 
 	// // Get tank player and controller
-	PlayerTank = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
-	TankPlayerController = Cast<AToonPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	PlayerPawn = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerController = Cast<AToonPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 
-	// BP Event for designers. Start Game start timer. Adds UI widgets to viewport
-	ReceiveStartGame();
+
+	// BP implementable event
+	BP_GameStart();
 }
 
 void AToonGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	// Super::EndPlay(EndPlayReason);
+	Super::EndPlay(EndPlayReason);
 
 	FPlatformCrashContext::SetGameData(TEXT("GameMode"), FString());
 }
 
 int32 AToonGameMode::GetEnemiesAliveCount() const
 {
-	TArray<AActor*> towers;
-	UGameplayStatics::GetAllActorsOfClass(this, AToonEnemyPawn::StaticClass(), towers);
+	TArray<AActor*> Towers;
+	UGameplayStatics::GetAllActorsOfClass(this, AToonEnemyPawn::StaticClass(), Towers);
 
-	return towers.Num();
-}
-
-void AToonGameMode::GameOver(const bool bWonGame)
-{
-	// BP Event for designers. 
-	RecieveGameOver(bWonGame);
+	return Towers.Num();
 }

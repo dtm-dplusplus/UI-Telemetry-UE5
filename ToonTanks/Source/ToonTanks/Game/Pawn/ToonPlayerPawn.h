@@ -10,28 +10,38 @@ class UInputAction;
 struct FInputActionValue;
 class UCameraShakeBase;
 
+
+
 UCLASS()
 class TOONTANKS_API AToonPlayerPawn : public AToonPawn
 {
 	GENERATED_BODY()
 
-
 public:
 	AToonPlayerPawn();
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	/** Movement */
 	void Move(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void Look();
+
+	/** Action */
 	virtual void Fire() override;
 	virtual void OnDestroy() override;
 
 
+protected:
+	virtual void BeginPlay() override;
+
 private:
+	///////////////////////////////////
+	// Movement Properties
+	///////////////////////////////////
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	float MovementSpeed;
+	float MoveSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed;
@@ -39,7 +49,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float LookSpeed;
 
-	// Camera Properties //
+	///////////////////////////////////
+	// Camera Properties
+	///////////////////////////////////
+	
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<class UCameraComponent> Camera;
 
@@ -51,33 +64,34 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Shake", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> DeathCameraShakeClass;
+	
+	///////////////////////////////////
+	// Input
+	///////////////////////////////////
 
-	// Input Properties //
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AToonPlayerController> PlayerController;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	/** Mapping Context for input actions and controller */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> InputMapping;
 
+	/** Input Actions */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputMoveForward;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputBoost;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputTurn;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputRotateTurret;
+	TObjectPtr<UInputAction> InputFire;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> InputLook;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputFire;
+	TObjectPtr<UInputAction> InputMoveForward;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<APlayerController> TankPlayerController;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputRotateTurret;
 
-	// Called to bind functionality to input
-	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> InputTurn;
 };

@@ -6,9 +6,12 @@
 #include "GameFramework/Pawn.h"
 #include "ToonPawn.generated.h"
 
+class UToonHealthComponent;
 class AToonProjectile;
 
-
+/**
+ * Base class which provides the majority of functionality to enemy and player pawns
+ */
 UCLASS()
 class TOONTANKS_API AToonPawn : public APawn
 {
@@ -17,67 +20,78 @@ class TOONTANKS_API AToonPawn : public APawn
 public:
 	AToonPawn();
 
-	virtual void OnDestroy();
+	/** Spawns and fires a ToonProjectile */
 	virtual void Fire();
 
+	/** Notifies Blueprint on Fire() */
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecieveFire(AToonProjectile* ProjectileFired);
 
+	/** Called On Destruct */
+	virtual void OnDestroy();
+
+	/** Notifies Blueprint on Destruct() */
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecieveDestroy();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void RecieveEnemyKiled();
-
-
-	virtual void Tick(float DeltaTime) override;
-
-public:
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	int32 ProjetcilesFired;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	int32 EnemiesKilled;
-
 protected:
-	virtual void BeginPlay() override;
 
 	// Actions //
 	void RotateTurret(const FVector& LookAtTarget);
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	bool bAlive;
+	/////////////////////////////////////////////
+	// Actor Scene Components
+	/////////////////////////////////////////////
 
-	// Mesh Components //
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	/** Collision capsule used for collision events on pawn */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	/** The base mesh of the pawn */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	/** The Turret mesh. Projectiles are fired through this */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> TurretMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	/** Projectile fire point. Use the Scene component to set this relative to the pawn mesh */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> ProjectileSpawnPoint;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
+	/** The inrerp rate for turret rotation. Higher values will make pawn respond faster to rotation input */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	float TurretInterpRate;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class UToonHealthComponent> HealthComponent;*/
 
-	// EFFECT | PARTICLES //
-	UPROPERTY(EditAnywhere, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
+	/////////////////////////////////////////////
+	// Weapons + Health
+	/////////////////////////////////////////////
+	
+	/** Actor Component used to store information related to health */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UToonHealthComponent> HealthComponent;
+	
+	/** The type of projectile to be spawned. Currently only one type of class */
+	UPROPERTY(EditAnywhere, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AToonProjectile> ProjectileClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Projectile", meta = (AllowPrivateAccess = "true"))
-	float ProjectileDamageAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
+	float ProjectileDamage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
+	float ProjectileSpeed;
+
+
+	/////////////////////////////////////////////
+	// Effects
+	/////////////////////////////////////////////
+
+	/** The particles spawned when this pawn destructs */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn|Effects", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UParticleSystem> DeathParticles;
 
-	// EFFECT | SOUND //
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BasePawn|Effects", meta = (AllowPrivateAccess = "true"))
+	/** The sound played when this pawn destructs */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn|Effects", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoundBase> DeathSound;
 };

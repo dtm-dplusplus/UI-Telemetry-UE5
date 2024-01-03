@@ -4,6 +4,8 @@
 #include "toonpawn.h"
 
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "ToonHealthComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "../Weapon/ToonProjectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -13,10 +15,6 @@ AToonPawn::AToonPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	// Set replication for replay functionality
-	bReplicates = true;
-	AActor::SetReplicateMovement(true);
 
 	// Set up components for blueprint
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
@@ -32,58 +30,41 @@ AToonPawn::AToonPawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
-	// HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
+	HealthComponent = CreateDefaultSubobject<UToonHealthComponent>("Health Component");
 
-	// Set properties of base pawn
+	// Set properties of  pawn
 	TurretInterpRate = 10.f;
-	ProjectileDamageAmount = 10.f;
+	ProjectileDamage = 50.f;
+	ProjectileSpeed = 100.f;
 }
-
-// Called when the game starts or when spawned
-void AToonPawn::BeginPlay()
-{
-	Super::BeginPlay();
-
-	ProjetcilesFired = 0;
-	EnemiesKilled = 0;
-}
-
-// Called every frame
-void AToonPawn::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 
 void AToonPawn::RotateTurret(const FVector& LookAtTarget)
 {
-	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
 
-	const FVector toTarget = LookAtTarget - TurretMesh->GetComponentLocation();
-	FRotator lookAtRotation = toTarget.Rotation();
-	lookAtRotation.Pitch = 0.0f;
-	lookAtRotation.Roll = 0.0f;
+	const FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
+	FRotator LookAtRotation = ToTarget.Rotation();
+	LookAtRotation.Pitch = 0.0f;
+	LookAtRotation.Roll = 0.0f;
 
 	TurretMesh->SetWorldRotation(
 		FMath::RInterpTo(
 			TurretMesh->GetComponentRotation(),
-			lookAtRotation,
-			deltaTime,
+			LookAtRotation,
+			DeltaTime,
 			TurretInterpRate));
 }
 
 void AToonPawn::Fire()
 {
-	ProjetcilesFired++;
-
 	// Spawn Projectile actor
-	const auto projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
+	const auto Projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 
 	// Set projectile properties
-	projectile->SetDamageAmount(ProjectileDamageAmount);
-	projectile->SetOwner(this);
+	Projectile->InitializeProjectile(ProjectileDamage, 1000);
+	Projectile->SetOwner(this);
 
-	RecieveFire(projectile);
+	RecieveFire(Projectile);
 }
 
 void AToonPawn::OnDestroy()

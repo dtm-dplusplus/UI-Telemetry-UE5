@@ -12,11 +12,10 @@ class TOONTANKS_API AToonProjectile : public AActor
 	GENERATED_BODY()
 	
 public:
-	// Sets default values for this actor's properties
 	AToonProjectile();
 
 	UFUNCTION()
-	void SetDamageAmount(const float Amount) { DamageAmount = Amount; }
+	void InitializeProjectile(const float Damage, const float Speed) { DamageAmount = Damage; }
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -25,7 +24,6 @@ protected:
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
 
 private:
 	// PROJECTILE PROPERTIES //
@@ -40,7 +38,7 @@ private:
 
 	// EFFECT | PARTICLES //
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Effects", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UParticleSystemComponent> TrailParticleComponent;
+	TObjectPtr<class UParticleSystemComponent> TrailParticleComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UParticleSystem> HitParticles;
@@ -54,5 +52,5 @@ private:
 
 	// EFFECT | CAMERA //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UCameraShakeBase> HitCameraShakeClass;
+	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
 };

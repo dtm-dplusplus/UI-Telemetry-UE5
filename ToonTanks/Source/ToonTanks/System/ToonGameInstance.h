@@ -6,6 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "ToonGameInstance.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(ToonGame, Log, All)
+
 /**
  * 
  */

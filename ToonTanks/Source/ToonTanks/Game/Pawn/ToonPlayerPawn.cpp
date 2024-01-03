@@ -3,15 +3,17 @@
 
 #include "ToonPlayerPawn.h"
 
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraShakeBase.h"
 #include "GameFramework/SpringArmComponent.h"
 
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "../../Player/ToonPlayerController.h"
+
+#include "ToonEnemyPawn.h"
+#include "Engine/LocalPlayer.h"
 #include "Kismet/GameplayStatics.h"
 
 AToonPlayerPawn::AToonPlayerPawn()
@@ -27,11 +29,9 @@ AToonPlayerPawn::AToonPlayerPawn()
 
 	//bAlive = true;
 
-	MovementSpeed = 300.0f;
+	MoveSpeed = 300.0f;
 	TurnSpeed = 150.0f;
 	LookSpeed = 50.0f;
-
-	//ProjectileDamageAmount = 40.f;
 
 }
 
@@ -56,42 +56,48 @@ void AToonPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent); //Call the parent version
 
 	// Get the player controller
-	TankPlayerController = Cast<APlayerController>(GetController());
-	TankPlayerController->SetInputMode(FInputModeGameAndUI());
+	PlayerController = Cast<AToonPlayerController>(GetController());
 
 	// Get the local player enhanced input subsystem
-	const auto eiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(TankPlayerController->GetLocalPlayer());
+	const auto EiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 	//Add the input mapping context
-	eiSubsystem->AddMappingContext(InputMapping, 0);
+	EiSubsystem->AddMappingContext(InputMapping, 0);
 
 	// Get the EnhancedInputComponent
-	const auto playerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	const auto PlayerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	//Bind to the mapping
-	playerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Move);
-	playerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Turn);
-	playerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
+	PlayerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Move);
+	PlayerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Turn);
+	PlayerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
 }
 
 void AToonPlayerPawn::OnDestroy()
 {
+
+	// Disable input
+	PlayerController->SetPlayerInputState(false);
+
 	// Shake camera on death
 	if (DeathCameraShakeClass)
 	{
-		TankPlayerController->ClientStartCameraShake(DeathCameraShakeClass);
+		PlayerController->ClientStartCameraShake(DeathCameraShakeClass);
 	}
 
-	//Super::OnDestroy();
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
-	bAlive = false;
+
+	// Notify Blueprint
+	RecieveDestroy();
+
+	Super::OnDestroy();
 }
 
 void AToonPlayerPawn::Move(const FInputActionValue& Value)
 {
-	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-	const float deltaLocation = MovementSpeed * Value.Get<float>() * deltaTime;
-	AddActorLocalOffset(FVector(deltaLocation, 0.0f, 0.0f));
+	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	const float DeltaLocation = MoveSpeed * Value.Get<float>() * DeltaTime;
+	AddActorLocalOffset(FVector(DeltaLocation, 0.0f, 0.0f));
 }
 
 void AToonPlayerPawn::Turn(const FInputActionValue& Value)
@@ -103,10 +109,10 @@ void AToonPlayerPawn::Turn(const FInputActionValue& Value)
 
 void AToonPlayerPawn::Look()
 {
-	if (TankPlayerController)
+	if (PlayerController)
 	{
 		FHitResult hitResult;
-		TankPlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
 		RotateTurret(hitResult.ImpactPoint);
 	}
 }
@@ -117,8 +123,7 @@ void AToonPlayerPawn::Fire()
 
 	if (LaunchCameraShakeClass)
 	{
-		TankPlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
+		PlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
 	}
-
 }
 

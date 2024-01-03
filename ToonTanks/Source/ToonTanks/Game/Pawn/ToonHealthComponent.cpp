@@ -2,18 +2,15 @@
 
 
 #include "ToonHealthComponent.h"
-// Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "../../../../../../../../../../../Program Files/Epic Games/UE_5.2/Engine/Source/Runtime/Engine/Classes/Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+
 #include "../GameMode/ToonGameMode.h"
 
 UToonHealthComponent::UToonHealthComponent()
 {
-
-	PrimaryComponentTick.bCanEverTick = true;
-
-
+	MaxHealth = 100.f;
 	Health = MaxHealth;
 }
 
@@ -22,26 +19,36 @@ void UToonHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UToonHealthComponent::OnApplyDamage);
-	ToonTankGameMode = Cast<AToonGameMode>(UGameplayStatics::GetGameMode(this));
+	if (AActor* MyOwner = GetOwner())
+	{
+		//The Owner Object is now bound to respond to the OnTakeAnyDamage Function.        
+		MyOwner->OnTakeAnyDamage.AddDynamic(this, &UToonHealthComponent::HandleTakeDamage);
+	}
 
+	ToonGameMode = Cast<AToonGameMode>(UGameplayStatics::GetGameMode(this));
+
+	Health = MaxHealth;
 }
 
-void UToonHealthComponent::OnApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+void UToonHealthComponent::HandleTakeDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType,
 	AController* InstigatedBy, AActor* DamageCauser)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("HandleTakeDamage on %s"), *GetOwner()->GetName())
 	// Check for no damage
-	if (Damage <= 0.0f) return;
+	if (Damage <= 0.0f)
+	{
+		return;
+	}
 
 	// Apply damage
-	Health -= Damage;
+	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
 
-	//BP
-	RecieveHealthChanged(Health, Damage);
+	// Broadcast event to C++ & Blueprint
+	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 
-	// Check actor died
-	if (Health <= 0.f)
+	// Notify gamemode actor should be dead. Destruction is handled there
+	if (Health <= 0.0f)
 	{
-		ToonTankGameMode->ActorDied(DamagedActor);
+		ToonGameMode->ActorDied(DamageActor);
 	}
 }

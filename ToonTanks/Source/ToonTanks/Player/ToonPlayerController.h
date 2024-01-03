@@ -16,6 +16,12 @@ class TOONTANKS_API AToonPlayerController : public APlayerController
 
 public:
 	AToonPlayerController();
-	void SetPlayerEnbaledState(bool bPlayerEnabled);
+
+	/**
+	 * Toggle for player input. If false, input is disabled
+	 * @param bPlayerEnabled - Enable or disable input
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerInputState(bool bPlayerEnabled);
 
 };
