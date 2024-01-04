@@ -14,11 +14,6 @@ class TOONTANKS_API AToonProjectile : public AActor
 public:
 	AToonProjectile();
 
-	UFUNCTION()
-	void InitializeProjectile(const float Damage, const float Speed) { DamageAmount = Damage; }
-
-	virtual void Tick(float DeltaTime) override;
-
 protected:
 	virtual void BeginPlay() override;
 

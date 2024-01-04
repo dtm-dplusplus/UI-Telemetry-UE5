@@ -13,26 +13,19 @@
 // Sets default values
 AToonProjectile::AToonProjectile()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	// Set replication for replay functionality
-	// Set replication for replay functionality
-	bReplicates = true;
-	AActor::SetReplicateMovement(true);
-
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	RootComponent = ProjectileMesh;
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
 
-	ProjectileMovementComponent->InitialSpeed = 800.f;
-	ProjectileMovementComponent->MaxSpeed = 950.f;
+	ProjectileMovementComponent->InitialSpeed = 400.f;
+	ProjectileMovementComponent->MaxSpeed = 400.f;
 
-	ProjectileMesh->SetSimulatePhysics(true);
 
 	TrailParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Smoke Trail"));
 	TrailParticleComponent->SetupAttachment(RootComponent);
+
+	ProjectileMesh->SetSimulatePhysics(true);
 }
 
 // Called when the game starts or when spawned
@@ -52,30 +45,27 @@ void AToonProjectile::BeginPlay()
 void AToonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit Object"))
-
 	// Play Hit sound
-	if (HitSound)
-	{
-		UGameplayStatics::SpawnSoundAtLocation(this, HitSound, GetActorLocation());
-	}
+	if (HitSound) UGameplayStatics::SpawnSoundAtLocation(this, HitSound, GetActorLocation());
 
-	const auto myOwner = GetOwner();
+	const auto MyOwner = GetOwner();
 
-	if (!myOwner)
+	if (!MyOwner)
 	{
 		Destroy();
 		return;
 	}
 
-	const auto myOwnerInstigator = myOwner->GetInstigatorController();
-	const auto damageTypeClass = UDamageType::StaticClass();
+	
 
-	if (OtherActor && OtherActor != this && OtherActor != myOwner)
+	// Here we apply damage to the act
+	if (OtherActor && OtherActor != this && OtherActor != MyOwner)
 	{
-		
-		if(float d = UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, myOwnerInstigator, this, damageTypeClass))
-			UE_LOG(LogTemp, Warning, TEXT("Applied %f damage to %s"), d, *OtherActor->GetName())
+		const TObjectPtr<AController> MyOwnerInstigator = MyOwner->GetInstigatorController();
+		const TObjectPtr<UClass> DamageTypeClass = UDamageType::StaticClass();
+
+		UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, MyOwnerInstigator, this, DamageTypeClass);
+
 		if (HitParticles)
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 
@@ -84,11 +74,5 @@ void AToonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	}
 
 	Destroy();
-}
-
-// Called every frame
-void AToonProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 

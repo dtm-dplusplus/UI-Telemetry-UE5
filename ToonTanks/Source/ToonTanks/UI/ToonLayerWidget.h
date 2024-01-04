@@ -16,7 +16,11 @@ struct FToonLayerData
 {
 	GENERATED_BODY()
 
-	FToonLayerData(){}
+	FToonLayerData()
+	{
+		LayerID = -1;
+		LayerName = "";
+	}
 
 	/**
 	 * Init Layer data attributes

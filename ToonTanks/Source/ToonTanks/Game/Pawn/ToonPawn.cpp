@@ -34,37 +34,28 @@ AToonPawn::AToonPawn()
 
 	// Set properties of  pawn
 	TurretInterpRate = 10.f;
-	ProjectileDamage = 50.f;
-	ProjectileSpeed = 100.f;
 }
 
-void AToonPawn::RotateTurret(const FVector& LookAtTarget)
+void AToonPawn::RotateTurret(const FVector& LookAtTarget) const
 {
-	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+	const float DeltaT = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
+
+	const FRotator TurretRotation = TurretMesh->GetComponentRotation();
 
 	const FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
-	FRotator LookAtRotation = ToTarget.Rotation();
-	LookAtRotation.Pitch = 0.0f;
-	LookAtRotation.Roll = 0.0f;
+
+	const FRotator LookAtRotation = { TurretRotation.Pitch, ToTarget.Rotation().Yaw,TurretRotation.Roll };
 
 	TurretMesh->SetWorldRotation(
-		FMath::RInterpTo(
-			TurretMesh->GetComponentRotation(),
-			LookAtRotation,
-			DeltaTime,
-			TurretInterpRate));
+		FMath::RInterpTo(TurretRotation,LookAtRotation,DeltaT, TurretInterpRate));
 }
 
 void AToonPawn::Fire()
 {
 	// Spawn Projectile actor
 	const auto Projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
-
-	// Set projectile properties
-	Projectile->InitializeProjectile(ProjectileDamage, 1000);
 	Projectile->SetOwner(this);
-
-	RecieveFire(Projectile);
+	BP_Fire(Projectile);
 }
 
 void AToonPawn::OnDestroy()

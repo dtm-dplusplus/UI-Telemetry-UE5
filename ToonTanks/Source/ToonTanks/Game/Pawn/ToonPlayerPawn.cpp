@@ -21,8 +21,8 @@ AToonPlayerPawn::AToonPlayerPawn()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->bEnableCameraLag = true;
-	SpringArm->CameraLagSpeed = 4.f;
-	SpringArm->CameraRotationLagSpeed = 4.f;
+	SpringArm->CameraLagSpeed = 1.f;
+	SpringArm->CameraRotationLagSpeed = 2.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -31,22 +31,14 @@ AToonPlayerPawn::AToonPlayerPawn()
 
 	MoveSpeed = 300.0f;
 	TurnSpeed = 150.0f;
-	LookSpeed = 50.0f;
-
-}
-
-void AToonPlayerPawn::BeginPlay()
-{
-	Super::BeginPlay();
-
-
 }
 
 void AToonPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Look();
+	// Update Turret rotation based on mouse position
+	RotateTurretOnLook();
 }
 
 
@@ -67,53 +59,48 @@ void AToonPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	const auto PlayerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	//Bind to the mapping
-	PlayerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Move);
-	PlayerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Turn);
+	PlayerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::MoveForward);
+	PlayerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::RotateBase);
 	PlayerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
 }
 
 void AToonPlayerPawn::OnDestroy()
 {
-
-	// Disable input
-	PlayerController->SetPlayerInputState(false);
-
 	// Shake camera on death
-	if (DeathCameraShakeClass)
-	{
-		PlayerController->ClientStartCameraShake(DeathCameraShakeClass);
-	}
+	if (DeathCameraShakeClass) PlayerController->ClientStartCameraShake(DeathCameraShakeClass);
 
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
+	SetActorEnableCollision(false);
 
 	// Notify Blueprint
-	RecieveDestroy();
+	BP_Destroy();
 
+	// We do this last so the code above executes ^^
 	Super::OnDestroy();
 }
 
-void AToonPlayerPawn::Move(const FInputActionValue& Value)
+void AToonPlayerPawn::MoveForward(const FInputActionValue& Value)
 {
 	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
 	const float DeltaLocation = MoveSpeed * Value.Get<float>() * DeltaTime;
 	AddActorLocalOffset(FVector(DeltaLocation, 0.0f, 0.0f));
 }
 
-void AToonPlayerPawn::Turn(const FInputActionValue& Value)
+void AToonPlayerPawn::RotateBase(const FInputActionValue& Value)
 {
-	const float deltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-	const float deltaRotation = TurnSpeed * Value.Get<float>() * deltaTime;
-	AddActorLocalRotation(FRotator(0.0f, deltaRotation, 0.0f), true);
+	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	const float DeltaRotation = TurnSpeed * Value.Get<float>() * DeltaTime;
+	AddActorLocalRotation(FRotator(0.0f, DeltaRotation, 0.0f), true);
 }
 
-void AToonPlayerPawn::Look()
+void AToonPlayerPawn::RotateTurretOnLook()
 {
 	if (PlayerController)
 	{
-		FHitResult hitResult;
-		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
-		RotateTurret(hitResult.ImpactPoint);
+		FHitResult HitResult;
+		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+		RotateTurret(HitResult.ImpactPoint);
 	}
 }
 
@@ -121,6 +108,7 @@ void AToonPlayerPawn::Fire()
 {
 	Super::Fire();
 
+	// Play camera shake
 	if (LaunchCameraShakeClass)
 	{
 		PlayerController->ClientStartCameraShake(LaunchCameraShakeClass);

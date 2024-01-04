@@ -25,19 +25,19 @@ public:
 
 	/** Notifies Blueprint on Fire() */
 	UFUNCTION(BlueprintImplementableEvent)
-	void RecieveFire(AToonProjectile* ProjectileFired);
+	void BP_Fire(AToonProjectile* ProjectileFired);
 
 	/** Called On Destruct */
 	virtual void OnDestroy();
 
 	/** Notifies Blueprint on Destruct() */
 	UFUNCTION(BlueprintImplementableEvent)
-	void RecieveDestroy();
+	void BP_Destroy();
 
 protected:
 
 	// Actions //
-	void RotateTurret(const FVector& LookAtTarget);
+	void RotateTurret(const FVector& LookAtTarget) const;
 
 	/////////////////////////////////////////////
 	// Actor Scene Components
@@ -70,18 +70,11 @@ protected:
 	
 	/** Actor Component used to store information related to health */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UToonHealthComponent> HealthComponent;
+	TObjectPtr<UToonHealthComponent> HealthComponent;
 	
 	/** The type of projectile to be spawned. Currently only one type of class */
 	UPROPERTY(EditAnywhere, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AToonProjectile> ProjectileClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
-	float ProjectileDamage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ToonPawn", meta = (AllowPrivateAccess = "true"))
-	float ProjectileSpeed;
-
 
 	/////////////////////////////////////////////
 	// Effects

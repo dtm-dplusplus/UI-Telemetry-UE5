@@ -22,7 +22,7 @@ protected:
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Tower", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class AToonPlayerPawn> PlayerPawn;
+	TObjectPtr<APawn> PlayerPawn;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Tower", meta = (AllowPrivateAccess = "true"))
 	FVector TankPlayerLocation;

@@ -10,8 +10,6 @@ class UInputAction;
 struct FInputActionValue;
 class UCameraShakeBase;
 
-
-
 UCLASS()
 class TOONTANKS_API AToonPlayerPawn : public AToonPawn
 {
@@ -22,18 +20,14 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	/** Movement */
-	void Move(const FInputActionValue& Value);
-	void Turn(const FInputActionValue& Value);
-	void Look();
 
 	/** Action */
 	virtual void Fire() override;
+
+	/**
+	 * Additional destruction handling. Here we implement the camera shakes for player pawn camera
+	 */
 	virtual void OnDestroy() override;
-
-
-protected:
-	virtual void BeginPlay() override;
 
 private:
 	///////////////////////////////////
@@ -46,8 +40,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	float LookSpeed;
+	/** Movement */
+	/** Forwards & Backwards movement */
+	void MoveForward(const FInputActionValue& Value);
+
+	/**
+	 * Left & Right Tank Base Rotaion
+	 * The Camera is a child to the base mesh, so it will folllow this rotation
+	 */
+	void RotateBase(const FInputActionValue& Value);
+
+	/** Rotates the turret based on the normal point of the mouse position on screen */
+	void RotateTurretOnLook();
 
 	///////////////////////////////////
 	// Camera Properties
@@ -82,9 +86,6 @@ private:
 	/** Input Actions */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> InputFire;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputLook;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> InputMoveForward;
