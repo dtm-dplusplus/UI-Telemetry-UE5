@@ -32,7 +32,7 @@ public:
 	* @return			- nullptr. If Layer creation failed
 	*/
 	UFUNCTION(BlueprintCallable)
-	UToonLayerWidget* CreatLayerWidget(TSubclassOf<UToonLayerWidget> Widget, FString Name);
+	UToonLayerWidget* CreateLayerWidget(TSubclassOf<UToonLayerWidget> Widget, FString Name);
 
 	/**
 	* @return	- layer pointer. If a matching layer name can be found
@@ -209,7 +209,7 @@ private:
 
 	/**
 	* Layer ID Counter. This is used to assign new layers unique IDs
-	* Its value is incremented in CreatLayerWidget() when a user calls this function
+	* Its value is incremented in CreateLayerWidget() when a user calls this function
 	*/
 	int LayerIDCount;
 
@@ -221,7 +221,7 @@ private:
 
 	/**
 	* List of UToonLayerWidget UI layers.
-	* When layers are created in CreatLayerWidget() they are added to this
+	* When layers are created in CreateLayerWidget() they are added to this
 	*/
 	TArray<TObjectPtr<UToonLayerWidget>> LayerList;
 

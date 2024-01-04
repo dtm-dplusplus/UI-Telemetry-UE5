@@ -37,10 +37,6 @@ void AToonGameMode::BeginPlay()
 	// // Get tank player and controller
 	PlayerPawn = Cast<AToonPlayerPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	PlayerController = Cast<AToonPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
-
-	// BP implementable event
-	BP_GameStart();
 }
 
 void AToonGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)

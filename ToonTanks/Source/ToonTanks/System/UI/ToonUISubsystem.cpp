@@ -10,12 +10,12 @@ void UToonUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	LayerIDCount = 0;
 }
 
-UToonLayerWidget* UToonUISubsystem::CreatLayerWidget(const TSubclassOf<UToonLayerWidget> Widget, const FString Name)
+UToonLayerWidget* UToonUISubsystem::CreateLayerWidget(const TSubclassOf<UToonLayerWidget> Widget, const FString Name)
 {
 	// Check Layer with name does not already exists
 	if (GetLayerByName(Name))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to CreatLayerWidget. A layer with this name already exists"))
+		UE_LOG(LogTemp, Error, TEXT("Failed to CreateLayerWidget. A layer with this name already exists"))
 			return nullptr;
 	}
 
@@ -32,7 +32,7 @@ UToonLayerWidget* UToonUISubsystem::CreatLayerWidget(const TSubclassOf<UToonLaye
 		return NewLayerWidget;
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Failed to CreatLayerWidget. Create Widget cast failed"))
+	UE_LOG(LogTemp, Error, TEXT("Failed to CreateLayerWidget. Create Widget cast failed"))
 
 		return nullptr;
 }

@@ -45,23 +45,23 @@ void AToonPlayerPawn::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AToonPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent); //Call the parent version
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// Get the player controller
-	PlayerController = Cast<AToonPlayerController>(GetController());
+	ensure(PlayerController = Cast<AToonPlayerController>(GetController()));
 
 	// Get the local player enhanced input subsystem
-	const auto EiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-	//Add the input mapping context
-	EiSubsystem->AddMappingContext(InputMapping, 0);
+	if (const auto EiSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		EiSubsystem->AddMappingContext(InputMapping, 0); //Add the input mapping context
 
 	// Get the EnhancedInputComponent
-	const auto PlayerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-
-	//Bind to the mapping
-	PlayerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::MoveForward);
-	PlayerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::RotateBase);
-	PlayerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
+	if (const auto PlayerEIcomponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		//Bind to the mapping
+		PlayerEIcomponent->BindAction(InputMoveForward, ETriggerEvent::Triggered, this, &AToonPlayerPawn::MoveForward);
+		PlayerEIcomponent->BindAction(InputTurn, ETriggerEvent::Triggered, this, &AToonPlayerPawn::RotateBase);
+		PlayerEIcomponent->BindAction(InputFire, ETriggerEvent::Triggered, this, &AToonPlayerPawn::Fire);
+	}
 }
 
 void AToonPlayerPawn::OnDestroy()
@@ -94,7 +94,7 @@ void AToonPlayerPawn::RotateBase(const FInputActionValue& Value)
 	AddActorLocalRotation(FRotator(0.0f, DeltaRotation, 0.0f), true);
 }
 
-void AToonPlayerPawn::RotateTurretOnLook()
+void AToonPlayerPawn::RotateTurretOnLook() const
 {
 	if (PlayerController)
 	{
@@ -108,10 +108,5 @@ void AToonPlayerPawn::Fire()
 {
 	Super::Fire();
 
-	// Play camera shake
-	if (LaunchCameraShakeClass)
-	{
-		PlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
-	}
+	if (LaunchCameraShakeClass) PlayerController->ClientStartCameraShake(LaunchCameraShakeClass);
 }
-

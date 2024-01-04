@@ -51,7 +51,7 @@ private:
 	void RotateBase(const FInputActionValue& Value);
 
 	/** Rotates the turret based on the normal point of the mouse position on screen */
-	void RotateTurretOnLook();
+	void RotateTurretOnLook() const;
 
 	///////////////////////////////////
 	// Camera Properties

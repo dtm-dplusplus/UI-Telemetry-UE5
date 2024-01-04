@@ -58,21 +58,22 @@ void AToonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	
 
-	// Here we apply damage to the act
+	// Here we apply damage if the actor is a pawn
 	if (OtherActor && OtherActor != this && OtherActor != MyOwner)
 	{
-		const TObjectPtr<AController> MyOwnerInstigator = MyOwner->GetInstigatorController();
-		const TObjectPtr<UClass> DamageTypeClass = UDamageType::StaticClass();
-
-		UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, MyOwnerInstigator, this, DamageTypeClass);
-
 		if (HitParticles)
 			UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 
-		if (HitCameraShakeClass)
+		const TObjectPtr<AController> MyOwnerInstigator = MyOwner->GetInstigatorController();
+		const TObjectPtr<UClass> DamageTypeClass = UDamageType::StaticClass();
+
+		if(Cast<APawn>(OtherActor))
+			UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, MyOwnerInstigator, this, DamageTypeClass);
+
+		// If player collision, shake the pawn camera
+		if (HitCameraShakeClass && UGameplayStatics::GetPlayerPawn(this, 0) == Cast<APawn>(OtherActor))
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
 
 	Destroy();
 }
-

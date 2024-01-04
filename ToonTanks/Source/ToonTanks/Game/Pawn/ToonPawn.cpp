@@ -52,7 +52,6 @@ void AToonPawn::RotateTurret(const FVector& LookAtTarget) const
 
 void AToonPawn::Fire()
 {
-	// Spawn Projectile actor
 	const auto Projectile = GetWorld()->SpawnActor<AToonProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 	Projectile->SetOwner(this);
 	BP_Fire(Projectile);
@@ -60,17 +59,11 @@ void AToonPawn::Fire()
 
 void AToonPawn::OnDestroy()
 {
-	// Spawn death particls
 	if (DeathParticles)
-	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation(), GetActorRotation());
-	}
 
-	// Play death sound
 	if (DeathSound)
-	{
 		UGameplayStatics::SpawnSoundAtLocation(this, DeathSound, GetActorLocation());
-	}
 
 	Destroy();
 }

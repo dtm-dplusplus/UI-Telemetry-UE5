@@ -7,6 +7,8 @@
 #include "ToonGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameOverDelegate, bool, bWonGame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStartDelegate);
+
 
 /**
  * 
@@ -18,27 +20,28 @@ class TOONTANKS_API AToonGameMode : public AGameModeBase
 	
 
 public:
+	
+
 	void ActorDied(AActor* DeadActor);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BP_ActorDied(bool bIsPlayer);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void BP_GameStart();
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void BP_GameOver(bool bWonGame);
-
-
-	virtual void BeginPlay() override;
-	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
-
+	/** Game Start */ 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
-	FOnGameOverDelegate OnGameOver;
+	FOnGameStartDelegate OnGameStartDelegate;
+
+	/** Game Over */
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnGameOverDelegate OnGameOverDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetEnemiesAliveCount() const;
 
+protected:
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 private:
 	// Player reference
 	UPROPERTY(VisibleInstanceOnly, Category = "ToonGameMode", meta = (AllowPrivateAccess = "true"))
@@ -46,14 +49,6 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, Category = "ToonGameMode", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AToonPlayerController> PlayerController;
-
-	// Delay before game starts
-	UPROPERTY(EditDefaultsOnly, Category = "ToonGameMode", meta = (InlineEditConditionToggle))
-	bool bGameStartDelay = false;
-
-	// Delay before game starts
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ToonGameMode", meta = (AllowPrivateAccess = "true", EditCondition = "bGameStartDelay"))
-	float GameStartDelay = 3.f;
 
 	// Number of turret towers in the level
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "ToonGameMode", meta = (AllowPrivateAccess = "true"))
