@@ -92,9 +92,11 @@ public:
 	 */
 	void DeactivateLayer()
 	{
+		LayerStack->ClearWidgets();
+
 		// Broadcast Underlying UCommonWidget Deactivation
 		DeactivateWidget();
-
+		
 		// Deactivate Underlying slate widget (Removes all active widgets on layer)
 		GetGameInstance()->GetGameViewportClient()->RemoveViewportWidgetContent(TakeWidget());
 	}

@@ -44,7 +44,7 @@ void AToonPawn::RotateTurret(const FVector& LookAtTarget) const
 
 	const FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
 
-	const FRotator LookAtRotation = { TurretRotation.Pitch, ToTarget.Rotation().Yaw,TurretRotation.Roll };
+	const FRotator LookAtRotation = { 0, ToTarget.Rotation().Yaw,0 };
 
 	TurretMesh->SetWorldRotation(
 		FMath::RInterpTo(TurretRotation,LookAtRotation,DeltaT, TurretInterpRate));

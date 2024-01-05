@@ -19,6 +19,12 @@ UToonLayerWidget* UToonUISubsystem::CreateLayerWidget(const TSubclassOf<UToonLay
 			return nullptr;
 	}
 
+	// Check layer has acceptable name
+	if(FText Error; !FFileHelper::IsFilenameValidForSaving(Name, Error))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to CreateLayerWidget. Layer Name not acceptable : %s") , *Error.ToString())
+			return nullptr;
+	}
 	// Create New Toon Layer Widget
 	if (UToonLayerWidget* NewLayerWidget = CreateWidget<UToonLayerWidget>(GetWorld(), Widget))
 	{

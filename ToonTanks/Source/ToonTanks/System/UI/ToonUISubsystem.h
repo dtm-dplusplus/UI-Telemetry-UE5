@@ -233,6 +233,8 @@ private:
 	bool RemoveLayer(UToonLayerWidget* Layer)
 	{
 		Layer->DeactivateLayer();
+		Layer->Destruct();
+
 		return static_cast<bool>(LayerList.RemoveSingle(Layer));
 	}
 };
